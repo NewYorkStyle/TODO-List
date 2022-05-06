@@ -1,16 +1,17 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom/client';
 import {Provider} from 'react-redux';
 import {HashRouter as Router, Route, Routes} from 'react-router-dom';
-import Main from './Modules/Main/Pages/Main';
+import TodoList from './Modules/TodoList/Pages/TodoList';
 import store from './Store';
-import * as ReactDOM from 'react-dom/client';
+import 'antd/dist/antd.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const element = (
     <Provider store={store}>
         <Router>
             <Routes>
-                <Route path="/" element={<Main />} />
+                <Route path="/" element={<TodoList />} />
             </Routes>
         </Router>
     </Provider>

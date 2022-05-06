@@ -5,15 +5,14 @@
     "main": "index.ts",
     "scripts": {
         "start": "webpack-dev-server --mode development --open --hot",
-        "build": "webpack --mode production",
-        "tslint:fix": "tslint -p . -c tslint.json --fix src/**/*"
+        "build": "webpack --mode production"
     },
     "keywords": [],
     "author": "New York Style",
     "license": "ISC",
     "husky": {
         "hooks": {
-            "pre-commit": "npm run tslint:fix && pretty-quick --staged"
+            "pre-commit": "npm run pretty-quick --staged"
         }
     },
     "devDependencies": {
@@ -33,13 +32,13 @@
         "source-map-loader": "3.0.1",
         "style-loader": "3.3.1",
         "ts-loader": "9.3.0",
-        "tslint": "6.1.3",
         "typescript": "4.6.4",
         "webpack": "5.72.0",
         "webpack-cli": "4.9.2",
         "webpack-dev-server": "4.8.1"
     },
     "dependencies": {
+        "antd": "4.20.2",
         "axios": "0.27.2",
         "react": "18.1.0",
         "react-dom": "18.1.0",

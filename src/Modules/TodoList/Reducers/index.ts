@@ -1,17 +1,40 @@
 import {IAction} from '../../../Core/Models';
 import {ActionsTypes} from '../Actions/ActionTypes';
-import {IMainStore} from '../Models';
+import {ITodoListStore} from '../Models';
 
-const initialState: IMainStore = {
+const initialState: ITodoListStore = {
     asyncData: {
+        data: null,
+        errorMsg: null,
+    },
+    asyncDataList: {
         data: null,
         errorMsg: null,
     },
     isLoading: false,
 };
 
-const mainReducer = (state = initialState, action: IAction) => {
+const todoListReducer = (
+    state = initialState,
+    action: IAction
+): ITodoListStore => {
     switch (action.type) {
+        case ActionsTypes.GET_DATA_LIST_SUCCESS:
+            return {
+                ...state,
+                asyncDataList: {
+                    data: action.payload,
+                },
+                isLoading: false,
+            };
+        case ActionsTypes.GET_DATA_LIST_FAILURE:
+            return {
+                ...state,
+                asyncDataList: {
+                    errorMsg: action.payload,
+                },
+                isLoading: false,
+            };
         case ActionsTypes.GET_DATA_START:
             return {
                 ...state,
@@ -38,4 +61,4 @@ const mainReducer = (state = initialState, action: IAction) => {
     }
 };
 
-export default mainReducer;
+export default todoListReducer;

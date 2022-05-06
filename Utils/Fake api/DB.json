@@ -1,3 +1,18 @@
 {
-    "getData": ["a", "b"]
+    "getData": [
+        {
+            "description": "Сделать приложение для контроля за списком дел (TODO-List)",
+            "id": "1",
+            "priotiry": "HIGH",
+            "status": "TODO",
+            "title": "TODO List"
+        },
+        {
+            "description": "Отдать долг родине",
+            "id": "2",
+            "priotiry": "HIGH",
+            "status": "DOING",
+            "title": "Отслужить"
+        }
+    ]
 }

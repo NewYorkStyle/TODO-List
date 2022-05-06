@@ -1,4 +1,4 @@
-import {IMainStore} from '../Modules/Main/Models';
+import {ITodoListStore} from '../Modules/TodoList/Models';
 
 /**
  * Интерфейс экшенов.
@@ -11,8 +11,19 @@ export interface IAction {
 /**
  * Общий стор приложения.
  *
- * @param {IMainStore} mainReducer Модуль "Главная страница"
+ * @param {ITodoListStore} todoListReducer Модуль "Главная страница"
  */
 export interface IStore {
-    mainReducer: IMainStore;
+    todoListReducer: ITodoListStore;
+}
+
+/**
+ * Модель данных с бэка.
+ *
+ * @prop {T} [data] Данные с бэка.
+ * @prop {string} [errorMsg] Сообщение об ошибке.
+ */
+export interface IAsyncData<T> {
+    data?: T;
+    errorMsg?: string;
 }
