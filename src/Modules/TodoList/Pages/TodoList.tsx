@@ -74,6 +74,13 @@ export const TodoList = ({
         setShowCreateModal(false);
     };
 
+    /**
+     * Обработчик изменения статуса TODO.
+     */
+    const handleStatusChange = (todo: ITodo): void => {
+        actions.editTodo(todo);
+    };
+
     React.useEffect(() => {
         actions.getData();
     }, []);
@@ -94,6 +101,7 @@ export const TodoList = ({
             ) : null}
             {showDetailsModal && asyncData?.data ? (
                 <TodoDetailsModal
+                    onChange={handleStatusChange}
                     onClose={handleDetailsModalClose}
                     todo={asyncData.data}
                 />

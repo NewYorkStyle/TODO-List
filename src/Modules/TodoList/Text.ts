@@ -9,6 +9,14 @@ export const TextObject = {
                 Doing: 'Doing',
                 Done: 'Done',
             },
+            Footer: {
+                Buttons: {
+                    Close: 'Close',
+                    Finish: 'Finish',
+                    Hold: 'Hold',
+                    Start: 'Start',
+                },
+            },
         },
         CreateModal: {
             Priority: {

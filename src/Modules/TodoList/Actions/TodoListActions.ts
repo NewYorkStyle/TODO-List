@@ -26,6 +26,13 @@ export interface ITodoListActions {
      * @param {ITodo} todo Задача.
      */
     createTodo: (todo: ITodo) => void;
+
+    /**
+     * Редактирование задачи.
+     *
+     * @param {ITodo} todo Задача.
+     */
+     editTodo: (todo: ITodo) => void;
 }
 
 /**
@@ -88,6 +95,9 @@ export class TodoListActions implements ITodoListActions {
         );
     };
 
+    /**
+     * @inheritdoc
+     */
     createTodo = (todo: ITodo) => {
         this.dispatch({
             type: ActionsTypes.GET_DATA_START,
@@ -95,6 +105,28 @@ export class TodoListActions implements ITodoListActions {
         this.service.createTodo(todo).then(
             () => {
                 this.getData();
+            },
+            (error: string) => {
+                console.log(error);
+                this.dispatch({
+                    type: ActionsTypes.GET_DATA_FAILURE,
+                    payload: error,
+                });
+            }
+        );
+    };
+
+    /**
+     * @inheritdoc
+     */
+    editTodo = (todo: ITodo) => {
+        this.dispatch({
+            type: ActionsTypes.GET_DATA_START,
+        });
+        this.service.editTodo(todo).then(
+            () => {
+                this.getData();
+                this.getDataByID(todo.id);
             },
             (error: string) => {
                 console.log(error);
