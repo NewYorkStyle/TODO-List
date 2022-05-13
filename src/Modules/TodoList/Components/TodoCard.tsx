@@ -6,22 +6,33 @@ import {ITodo} from '../Models';
 
 /**
  * Модель props на компонента TodoCard.
+ *
+ * @prop {Function} onClick Обработчик клика.
+ * @prop {ITodo} todo Задача.
  */
-export interface ITodoCardProps {
+interface ITodoCardProps {
     onClick: (id: string) => void;
     todo: ITodo;
 }
 
 export const TodoCard = ({
     onClick,
-    todo: {priotiry, title, id},
+    todo: {priority: priority, title, id},
 }: ITodoCardProps) => {
+    /**
+     * Обработчик клика.
+     */
     const handleOnClick = () => {
         onClick(id);
     };
 
-    const priorityMark = (priotiry: EPriority): BaseType => {
-        switch (priotiry) {
+    /**
+     * Получение маркера соответствующего приоритету задачи.
+     *
+     * @param {EPriority} priority Приоритет задачи.
+     */
+    const getPriorityMark = (priority: EPriority): BaseType => {
+        switch (priority) {
             case EPriority.HIGH:
                 return EMarkType.HIGH;
             case EPriority.MEDIUM:
@@ -34,8 +45,8 @@ export const TodoCard = ({
 
     return (
         <div onClick={handleOnClick}>
-            <Typography.Text type={priorityMark(priotiry)}>
-                [{priotiry}]
+            <Typography.Text type={getPriorityMark(priority)}>
+                [{priority}]
             </Typography.Text>
             {title}
         </div>

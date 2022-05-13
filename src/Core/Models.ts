@@ -2,6 +2,9 @@ import {ITodoListStore} from '../Modules/TodoList/Models';
 
 /**
  * Интерфейс экшенов.
+ * 
+ * @param {string} type Тип экшена.
+ * @param {any} [payload] Значение.
  */
 export interface IAction {
     type: string;
@@ -11,7 +14,7 @@ export interface IAction {
 /**
  * Общий стор приложения.
  *
- * @param {ITodoListStore} todoListReducer Модуль "Главная страница"
+ * @param {ITodoListStore} todoListReducer Модуль "Список задач"
  */
 export interface IStore {
     todoListReducer: ITodoListStore;

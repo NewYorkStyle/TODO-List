@@ -1,4 +1,4 @@
-import {List} from 'antd';
+import {Button, List} from 'antd';
 import * as React from 'react';
 import {connect} from 'react-redux';
 import {Dispatch} from 'redux';
@@ -8,12 +8,18 @@ import {ITodo} from '../Models';
 import {TodoListServices} from '../Services/TodoListServices';
 import {TextObject} from '../Text';
 import {TodoCard} from '../Components/TodoCard';
-import {TodoModal} from '../Components/TodoModal';
+import {TodoDetailsModal} from '../Components/TodoDetailsModal';
+import PlusCircleOutlined from '@ant-design/icons/lib/icons/PlusCircleOutlined';
+import {TodoCreateModal} from '../Components/TodoCreateModal';
 
 /**
  * Модель props на компонента TodoList.
+ *
+ * @prop {ITodoListActions} [actions] Экшены.
+ * @prop {IAsyncData<ITodo>} [asyncData] Задача.
+ * @prop {IAsyncData<ITodo[]>} [asyncDataList] Список задач.
  */
-export interface ITodoListProps {
+interface ITodoListProps {
     actions?: ITodoListActions;
     asyncData?: IAsyncData<ITodo>;
     asyncDataList?: IAsyncData<ITodo[]>;
@@ -24,15 +30,48 @@ export const TodoList = ({
     asyncDataList,
     asyncData,
 }: ITodoListProps) => {
-    const [showModal, setShowModal] = React.useState(false);
+    const [showDetailsModal, setShowDetailsModal] =
+        React.useState<boolean>(false);
+    const [showCreateModal, setShowCreateModal] =
+        React.useState<boolean>(false);
 
+    /**
+     * Обаотчик клика по задаче в списке.
+     *
+     * @param {string} id Идентификатор.
+     */
     const handleCardOnClick = (id: string): void => {
         actions.getDataByID(id);
-        setShowModal(true);
+        setShowDetailsModal(true);
     };
 
-    const handleModalClose = (): void => {
-        setShowModal(false);
+    /**
+     * Обработчик закрытия модального окна детального просмотра.
+     */
+    const handleDetailsModalClose = (): void => {
+        setShowDetailsModal(false);
+    };
+
+    /**
+     * Обработчик закрытия модального окна создания.
+     */
+    const handleCreateModalClose = (): void => {
+        setShowCreateModal(false);
+    };
+
+    /**
+     * Обработчик клика по кнопке создать (плюсик)
+     */
+    const handleCreateButtonClick = (): void => {
+        setShowCreateModal(true);
+    };
+
+    /**
+     * Обработчик создания TODO.
+     */
+    const handleCreateTodoClick = (todo: ITodo): void => {
+        actions.createTodo(todo);
+        setShowCreateModal(false);
     };
 
     React.useEffect(() => {
@@ -45,7 +84,7 @@ export const TodoList = ({
                 <List
                     header={<div>{TextObject.TodoList.List.TODO}</div>}
                     bordered
-                    dataSource={asyncDataList?.data}
+                    dataSource={asyncDataList.data}
                     renderItem={(item) => (
                         <List.Item>
                             <TodoCard onClick={handleCardOnClick} todo={item} />
@@ -53,9 +92,25 @@ export const TodoList = ({
                     )}
                 />
             ) : null}
-            {showModal && asyncData?.data ? (
-                <TodoModal onClose={handleModalClose} todo={asyncData.data} />
+            {showDetailsModal && asyncData?.data ? (
+                <TodoDetailsModal
+                    onClose={handleDetailsModalClose}
+                    todo={asyncData.data}
+                />
             ) : null}
+            {showCreateModal && (
+                <TodoCreateModal
+                    onClose={handleCreateModalClose}
+                    onSave={handleCreateTodoClick}
+                />
+            )}
+            <Button
+                className="createButton"
+                type="primary"
+                shape="circle"
+                icon={<PlusCircleOutlined />}
+                onClick={handleCreateButtonClick}
+            />
         </React.Fragment>
     );
 };

@@ -15,8 +15,17 @@ export interface ITodoListActions {
 
     /**
      * Получение детальных даных по задаче.
+     *
+     * @param {string} id Идентификатор.
      */
     getDataByID: (id: string) => void;
+
+    /**
+     * Создание задачи.
+     *
+     * @param {ITodo} todo Задача.
+     */
+    createTodo: (todo: ITodo) => void;
 }
 
 /**
@@ -68,6 +77,24 @@ export class TodoListActions implements ITodoListActions {
                     type: ActionsTypes.GET_DATA_SUCCESS,
                     payload: response.data,
                 });
+            },
+            (error: string) => {
+                console.log(error);
+                this.dispatch({
+                    type: ActionsTypes.GET_DATA_FAILURE,
+                    payload: error,
+                });
+            }
+        );
+    };
+
+    createTodo = (todo: ITodo) => {
+        this.dispatch({
+            type: ActionsTypes.GET_DATA_START,
+        });
+        this.service.createTodo(todo).then(
+            () => {
+                this.getData();
             },
             (error: string) => {
                 console.log(error);

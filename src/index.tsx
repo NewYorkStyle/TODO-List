@@ -5,6 +5,7 @@ import {HashRouter as Router, Route, Routes} from 'react-router-dom';
 import TodoList from './Modules/TodoList/Pages/TodoList';
 import store from './Store';
 import 'antd/dist/antd.css';
+import './Styles/TodoList.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const element = (

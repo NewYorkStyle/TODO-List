@@ -1,0 +1,13 @@
+.createButton {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+}
+
+.prioritySelect {
+    width: 100px;
+}
+
+.description {
+    width: 400px;
+}
