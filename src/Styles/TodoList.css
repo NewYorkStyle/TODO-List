@@ -11,3 +11,8 @@
 .description {
     width: 400px;
 }
+
+.deleteButton {
+    position:absolute;
+    left: 15px;
+}

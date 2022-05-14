@@ -81,6 +81,14 @@ export const TodoList = ({
         actions.editTodo(todo);
     };
 
+    /**
+     * Обработчик удаления TODO.
+     */
+    const handleDelete = (todo: ITodo): void => {
+        actions.deleteTodo(todo);
+        setShowDetailsModal(false);
+    };
+
     React.useEffect(() => {
         actions.getData();
     }, []);
@@ -93,7 +101,7 @@ export const TodoList = ({
                     bordered
                     dataSource={asyncDataList.data}
                     renderItem={(item) => (
-                        <List.Item>
+                        <List.Item key={item.id}>
                             <TodoCard onClick={handleCardOnClick} todo={item} />
                         </List.Item>
                     )}
@@ -103,6 +111,7 @@ export const TodoList = ({
                 <TodoDetailsModal
                     onChange={handleStatusChange}
                     onClose={handleDetailsModalClose}
+                    onDelete={handleDelete}
                     todo={asyncData.data}
                 />
             ) : null}

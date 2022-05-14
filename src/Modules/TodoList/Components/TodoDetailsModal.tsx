@@ -1,4 +1,4 @@
-import {Button, Modal, Steps} from 'antd';
+import {Button, Modal, Popconfirm, Steps} from 'antd';
 import * as React from 'react';
 import {EStatus} from '../Enums';
 import {ITodo} from '../Models';
@@ -8,11 +8,13 @@ import {TextObject} from '../Text';
  * Модель props на компонента TodoDetailsModal.
  *
  * @prop {Function} onChange Обработчик изменения статуса.
+ * @prop {Function} onDelete Обработчик удаления задачи.
  * @prop {Function} onClose Обработчик закрытия модального окна.
  * @prop {ITodo} todo Задача.
  */
 interface ITodoDetailsModalProps {
     onChange: (todo: ITodo) => void;
+    onDelete: (todo: ITodo) => void;
     onClose: () => void;
     todo: ITodo;
 }
@@ -20,6 +22,7 @@ interface ITodoDetailsModalProps {
 export const TodoDetailsModal = ({
     onChange,
     onClose,
+    onDelete,
     todo,
     todo: {description, status, title},
 }: ITodoDetailsModalProps) => {
@@ -42,6 +45,10 @@ export const TodoDetailsModal = ({
 
     const handleStatusChange = (status: EStatus) => {
         onChange({...todo, status});
+    };
+
+    const handleDelete = () => {
+        onDelete(todo);
     };
 
     const getFooterByttons = (status: EStatus) => {
@@ -85,6 +92,28 @@ export const TodoDetailsModal = ({
             default:
                 break;
         }
+
+        config.unshift(
+            <Popconfirm
+                title={TextObject.TodoList.DetailsModal.Footer.PopConfirm.Title}
+                onConfirm={handleDelete}
+                okText={
+                    TextObject.TodoList.DetailsModal.Footer.PopConfirm.Confirm
+                }
+                cancelText={
+                    TextObject.TodoList.DetailsModal.Footer.PopConfirm.Cancle
+                }
+            >
+                <Button
+                    key="Delete"
+                    type="primary"
+                    danger
+                    className="deleteButton"
+                >
+                    {TextObject.TodoList.DetailsModal.Footer.Buttons.Delete}
+                </Button>
+            </Popconfirm>
+        );
 
         return config;
     };

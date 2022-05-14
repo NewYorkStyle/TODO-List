@@ -32,7 +32,14 @@ export interface ITodoListActions {
      *
      * @param {ITodo} todo Задача.
      */
-     editTodo: (todo: ITodo) => void;
+    editTodo: (todo: ITodo) => void;
+
+    /**
+     * Удаление задачи.
+     *
+     * @param {ITodo} todo Задача.
+     */
+     deleteTodo: (todo: ITodo) => void;
 }
 
 /**
@@ -127,6 +134,27 @@ export class TodoListActions implements ITodoListActions {
             () => {
                 this.getData();
                 this.getDataByID(todo.id);
+            },
+            (error: string) => {
+                console.log(error);
+                this.dispatch({
+                    type: ActionsTypes.GET_DATA_FAILURE,
+                    payload: error,
+                });
+            }
+        );
+    };
+
+    /**
+     * @inheritdoc
+     */
+    deleteTodo = (todo: ITodo) => {
+        this.dispatch({
+            type: ActionsTypes.GET_DATA_START,
+        });
+        this.service.deleteTodo(todo).then(
+            () => {
+                this.getData();
             },
             (error: string) => {
                 console.log(error);

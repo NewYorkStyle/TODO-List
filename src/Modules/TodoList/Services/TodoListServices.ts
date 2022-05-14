@@ -32,6 +32,13 @@ export interface ITodoListServices {
      * @param {ITodo} todo Задача.
      */
     editTodo: (todo: ITodo) => Promise<IAsyncData<ITodo>>;
+
+    /**
+     * Удаление задачи.
+     *
+     * @param {ITodo} todo Задача.
+     */
+     deleteTodo: (todo: ITodo) => Promise<IAsyncData<ITodo>>;
 }
 
 /**
@@ -64,5 +71,12 @@ export class TodoListServices implements ITodoListServices {
      */
     editTodo = (todo: ITodo): Promise<IAsyncData<ITodo>> => {
         return axios.put(`${REST}/todo/${todo.id}`, todo);
+    };
+
+    /**
+     * @inheritdoc
+     */
+    deleteTodo = (todo: ITodo): Promise<IAsyncData<ITodo>> => {
+        return axios.delete(`${REST}/todo/${todo.id}`);
     };
 }
