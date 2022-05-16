@@ -17,7 +17,7 @@ interface ITodoCardProps {
 
 export const TodoCard = ({
     onClick,
-    todo: {priority: priority, title, id},
+    todo: {id, priority, title},
 }: ITodoCardProps) => {
     /**
      * Обработчик клика.

@@ -2,13 +2,13 @@ import {ITodoListStore} from '../Modules/TodoList/Models';
 
 /**
  * Интерфейс экшенов.
- * 
- * @param {string} type Тип экшена.
+ *
  * @param {any} [payload] Значение.
+ * @param {string} type Тип экшена.
  */
 export interface IAction {
-    type: string;
     payload?: any;
+    type: string;
 }
 
 /**

@@ -9,6 +9,8 @@ import {TextObject} from '../Text';
  * Модель props на компонента TodoCreateModal.
  *
  * @prop {Function} onClose Обработчик закрытия модального окна.
+ * @prop {Function} onSave Обработчик создания/сохранения.
+ * @prop {ITodo} todo Задача.
  */
 interface ITodoCreateModalProps {
     onClose: () => void;
@@ -56,6 +58,8 @@ export const TodoCreateModal = ({
 
     /**
      * Обработчик изменения поля priority.
+     *
+     * @param {EPriority} value Значение селекта.
      */
     const handlePriorityChange = (value: EPriority) => {
         setNewTodo({
@@ -64,10 +68,16 @@ export const TodoCreateModal = ({
         });
     };
 
+    /**
+     * Обработчик создания/сохранения
+     */
     const handleSave = () => {
         onSave(newTodo);
     };
 
+    /**
+     * Получение заголовка модального окна.
+     */
     const getTitle = (): string => {
         return todo
             ? TextObject.TodoList.CreateModal.Title.Edit
@@ -75,7 +85,7 @@ export const TodoCreateModal = ({
     };
 
     return (
-        <Modal title={getTitle()} visible onOk={handleSave} onCancel={onClose}>
+        <Modal onCancel={onClose} onOk={handleSave} title={getTitle()} visible>
             <Space direction="vertical">
                 <Input
                     onChange={handleTitleChange}
@@ -85,18 +95,18 @@ export const TodoCreateModal = ({
                     value={newTodo.title}
                 />
                 <TextArea
-                    onChange={handleDescriptionChange}
+                    autoSize={{minRows: 3, maxRows: 5}}
                     className="description"
+                    onChange={handleDescriptionChange}
                     placeholder={
                         TextObject.TodoList.CreateModal.Placeholder.Description
                     }
-                    autoSize={{minRows: 3, maxRows: 5}}
                     value={newTodo.description}
                 />
                 <Select
-                    onChange={handlePriorityChange}
-                    defaultValue={EPriority.LOW}
                     className="prioritySelect"
+                    defaultValue={EPriority.LOW}
+                    onChange={handlePriorityChange}
                     value={newTodo.priority}
                 >
                     <Select.Option value={EPriority.LOW}>

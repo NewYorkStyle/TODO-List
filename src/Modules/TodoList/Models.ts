@@ -1,5 +1,5 @@
-import {IAsyncData} from '../../Core/Models';
 import {EPriority, EStatus} from './Enums';
+import {IAsyncData} from '../../Core/Models';
 
 /**
  * Модель задачи.

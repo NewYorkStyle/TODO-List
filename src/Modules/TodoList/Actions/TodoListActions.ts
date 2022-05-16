@@ -1,8 +1,8 @@
 import {Dispatch} from 'redux';
-import {IAsyncData} from '../../../Core/Models';
+import {ActionsTypes} from './ActionTypes';
 import {ITodo} from '../Models';
 import {ITodoListServices} from '../Services/TodoListServices';
-import {ActionsTypes} from './ActionTypes';
+import {IAsyncData} from '../../../Core/Models';
 
 /**
  * Интерфейс экшенов для работы с модулем TodoList.
@@ -39,7 +39,7 @@ export interface ITodoListActions {
      *
      * @param {ITodo} todo Задача.
      */
-     deleteTodo: (todo: ITodo) => void;
+    deleteTodo: (todo: ITodo) => void;
 }
 
 /**

@@ -1,7 +1,7 @@
 import axios from 'axios';
+import {ITodo} from '../Models';
 import {REST} from '../../../Core/Consts';
 import {IAsyncData} from '../../../Core/Models';
-import {ITodo} from '../Models';
 
 /**
  * Интерфейс сервисов для работы с модулем TodoList.

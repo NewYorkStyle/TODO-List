@@ -8,15 +8,15 @@ import {TextObject} from '../Text';
  * Модель props на компонента TodoDetailsModal.
  *
  * @prop {Function} onChange Обработчик изменения статуса.
- * @prop {Function} onDelete Обработчик удаления задачи.
  * @prop {Function} onClose Обработчик закрытия модального окна.
+ * @prop {Function} onDelete Обработчик удаления задачи.
  * @prop {Function} onEdit Обработчик кнопки редактирования.
  * @prop {ITodo} todo Задача.
  */
 interface ITodoDetailsModalProps {
     onChange: (todo: ITodo) => void;
-    onDelete: (todo: ITodo) => void;
     onClose: () => void;
+    onDelete: (todo: ITodo) => void;
     onEdit: () => void;
     todo: ITodo;
 }
@@ -46,15 +46,28 @@ export const TodoDetailsModal = ({
         }
     };
 
+    /**
+     * Обработчик изменения статуса задачи.
+     *
+     * @param {EStatus} status Новое значение статуса.
+     */
     const handleStatusChange = (status: EStatus) => {
         onChange({...todo, status});
     };
 
+    /**
+     * Обработчик удаления задачи.
+     */
     const handleDelete = () => {
         onDelete(todo);
     };
 
-    const getFooterByttons = (status: EStatus) => {
+    /**
+     * Функция для получения конфигурации футера модального окнаю
+     *
+     * @param {EStatus} status Текущее значение статуса.
+     */
+    const getFooterButtons = (status: EStatus): JSX.Element[] => {
         let config = [
             <Button key="close" onClick={onClose}>
                 {TextObject.TodoList.DetailsModal.Footer.Buttons.Close}
@@ -67,8 +80,8 @@ export const TodoDetailsModal = ({
                 config.unshift(
                     <Button
                         key="start"
-                        type="primary"
                         onClick={() => handleStatusChange(EStatus.DOING)}
+                        type="primary"
                     >
                         {TextObject.TodoList.DetailsModal.Footer.Buttons.Start}
                     </Button>
@@ -78,15 +91,15 @@ export const TodoDetailsModal = ({
                 config.unshift(
                     <Button
                         key="hold"
-                        type="primary"
                         onClick={() => handleStatusChange(EStatus.TODO)}
+                        type="primary"
                     >
                         {TextObject.TodoList.DetailsModal.Footer.Buttons.Hold}
                     </Button>,
                     <Button
                         key="finish"
-                        type="primary"
                         onClick={() => handleStatusChange(EStatus.DONE)}
+                        type="primary"
                     >
                         {TextObject.TodoList.DetailsModal.Footer.Buttons.Finish}
                     </Button>
@@ -99,24 +112,24 @@ export const TodoDetailsModal = ({
         config.unshift(
             <div className="deleteButton">
                 <Popconfirm
-                    title={
-                        TextObject.TodoList.DetailsModal.Footer.PopConfirm.Title
-                    }
-                    onConfirm={handleDelete}
-                    okText={
-                        TextObject.TodoList.DetailsModal.Footer.PopConfirm
-                            .Confirm
-                    }
                     cancelText={
                         TextObject.TodoList.DetailsModal.Footer.PopConfirm
                             .Cancle
                     }
+                    okText={
+                        TextObject.TodoList.DetailsModal.Footer.PopConfirm
+                            .Confirm
+                    }
+                    onConfirm={handleDelete}
+                    title={
+                        TextObject.TodoList.DetailsModal.Footer.PopConfirm.Title
+                    }
                 >
-                    <Button key="Delete" type="primary" danger>
+                    <Button danger key="Delete" type="primary">
                         {TextObject.TodoList.DetailsModal.Footer.Buttons.Delete}
                     </Button>
                 </Popconfirm>
-                <Button key="edit" type="primary" onClick={onEdit}>
+                <Button key="edit" onClick={onEdit} type="primary">
                     {TextObject.TodoList.DetailsModal.Footer.Buttons.Edit}
                 </Button>
             </div>
@@ -127,12 +140,12 @@ export const TodoDetailsModal = ({
 
     return (
         <Modal
+            footer={getFooterButtons(status)}
             onCancel={onClose}
             title={title}
             visible
-            footer={getFooterByttons(status)}
         >
-            <Steps progressDot current={getCurrentStep(status)}>
+            <Steps current={getCurrentStep(status)} progressDot>
                 <Steps.Step
                     title={TextObject.TodoList.DetailsModal.Steps.TODO}
                 />

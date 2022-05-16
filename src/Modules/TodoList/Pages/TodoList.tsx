@@ -1,16 +1,22 @@
-import {Button, List, Spin} from 'antd';
+import {Button, Col, List, Row, Spin} from 'antd';
+import {
+    CheckCircleTwoTone,
+    FireTwoTone,
+    PlusCircleOutlined,
+    QuestionCircleTwoTone,
+} from '@ant-design/icons';
 import * as React from 'react';
 import {connect} from 'react-redux';
 import {Dispatch} from 'redux';
-import {IAsyncData, IStore} from '../../../Core/Models';
 import {ITodoListActions, TodoListActions} from '../Actions/TodoListActions';
+import {TodoCard} from '../Components/TodoCard';
+import {TodoCreateModal} from '../Components/TodoCreateModal';
+import {TodoDetailsModal} from '../Components/TodoDetailsModal';
+import {EStatus} from '../Enums';
 import {ITodo} from '../Models';
 import {TodoListServices} from '../Services/TodoListServices';
 import {TextObject} from '../Text';
-import {TodoCard} from '../Components/TodoCard';
-import {TodoDetailsModal} from '../Components/TodoDetailsModal';
-import PlusCircleOutlined from '@ant-design/icons/lib/icons/PlusCircleOutlined';
-import {TodoCreateModal} from '../Components/TodoCreateModal';
+import {IAsyncData, IStore} from '../../../Core/Models';
 
 /**
  * Модель props на компонента TodoList.
@@ -29,8 +35,8 @@ interface ITodoListProps {
 
 export const TodoList = ({
     actions,
-    asyncDataList,
     asyncData,
+    asyncDataList,
     isLoading,
 }: ITodoListProps) => {
     const [showDetailsModal, setShowDetailsModal] =
@@ -121,19 +127,86 @@ export const TodoList = ({
         actions.getData();
     }, []);
 
+    const todoList = asyncDataList?.data?.filter((todo) => {
+        return todo.status === EStatus.TODO;
+    });
+
+    const doingList = asyncDataList?.data?.filter((todo) => {
+        return todo.status === EStatus.DOING;
+    });
+
+    const doneList = asyncDataList?.data?.filter((todo) => {
+        return todo.status === EStatus.DONE;
+    });
+
     return (
         <Spin spinning={isLoading} tip={TextObject.TodoList.Loading}>
             {asyncDataList?.data ? (
-                <List
-                    header={<div>{TextObject.TodoList.List.TODO}</div>}
-                    bordered
-                    dataSource={asyncDataList.data}
-                    renderItem={(item) => (
-                        <List.Item key={item.id}>
-                            <TodoCard onClick={handleCardOnClick} todo={item} />
-                        </List.Item>
-                    )}
-                />
+                <Row>
+                    <Col span={8}>
+                        <List
+                            bordered
+                            className="todoList"
+                            dataSource={todoList}
+                            header={
+                                <b>
+                                    <QuestionCircleTwoTone />{' '}
+                                    {TextObject.TodoList.List.TODO}
+                                </b>
+                            }
+                            renderItem={(item) => (
+                                <List.Item key={item.id}>
+                                    <TodoCard
+                                        onClick={handleCardOnClick}
+                                        todo={item}
+                                    />
+                                </List.Item>
+                            )}
+                        />
+                    </Col>
+                    <Col span={8}>
+                        <List
+                            bordered
+                            className="todoList"
+                            dataSource={doingList}
+                            header={
+                                <b>
+                                    <FireTwoTone />{' '}
+                                    {TextObject.TodoList.List.Doing}
+                                </b>
+                            }
+                            renderItem={(item) => (
+                                <List.Item key={item.id}>
+                                    <TodoCard
+                                        onClick={handleCardOnClick}
+                                        todo={item}
+                                    />
+                                </List.Item>
+                            )}
+                        />
+                    </Col>
+                    <Col span={8}>
+                        <List
+                            bordered
+                            className="todoList"
+                            dataSource={doneList}
+                            header={
+                                <b>
+                                    <CheckCircleTwoTone />{' '}
+                                    {TextObject.TodoList.List.Done}
+                                </b>
+                            }
+                            renderItem={(item) => (
+                                <List.Item key={item.id}>
+                                    <TodoCard
+                                        onClick={handleCardOnClick}
+                                        todo={item}
+                                    />
+                                </List.Item>
+                            )}
+                        />
+                    </Col>
+                </Row>
             ) : null}
             {showDetailsModal && asyncData?.data ? (
                 <TodoDetailsModal
@@ -152,17 +225,17 @@ export const TodoList = ({
             )}
             {showEditModal && (
                 <TodoCreateModal
-                    todo={asyncData.data}
                     onClose={handleEditModalClose}
                     onSave={handleEditSave}
+                    todo={asyncData.data}
                 />
             )}
             <Button
                 className="createButton"
-                type="primary"
-                shape="circle"
                 icon={<PlusCircleOutlined />}
                 onClick={handleCreateButtonClick}
+                shape="circle"
+                type="primary"
             />
         </Spin>
     );

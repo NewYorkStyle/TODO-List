@@ -1,6 +1,6 @@
-import {IAction} from '../../../Core/Models';
 import {ActionsTypes} from '../Actions/ActionTypes';
 import {ITodoListStore} from '../Models';
+import {IAction} from '../../../Core/Models';
 
 const initialState: ITodoListStore = {
     asyncData: {

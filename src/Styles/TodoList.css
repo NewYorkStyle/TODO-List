@@ -16,3 +16,21 @@
     position:absolute;
     left: 15px;
 }
+
+.todoList {
+    height: 100vh;
+}
+
+.ant-list-split .ant-list-item:last-child {
+    border: 1px solid #f0f0f0;
+}
+
+.ant-list-split .ant-list-header {
+    border: 1px solid black;
+}
+
+.ant-list-bordered .ant-list-item {
+    padding-right: 24px;
+    padding-left: 24px;
+    cursor: pointer;
+}

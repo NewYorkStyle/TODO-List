@@ -38,6 +38,8 @@ export const TextObject = {
             },
         },
         List: {
+            Doing: 'Doing',
+            Done: 'Done',
             TODO: 'TODO',
         },
         Loading: 'Loading...',
