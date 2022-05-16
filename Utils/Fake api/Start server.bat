@@ -1,1 +1,1 @@
-json-server --watch DB.json
+json-server --watch --delay 500 DB.json

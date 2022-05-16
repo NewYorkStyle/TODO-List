@@ -1,4 +1,4 @@
-import {Button, List} from 'antd';
+import {Button, List, Spin} from 'antd';
 import * as React from 'react';
 import {connect} from 'react-redux';
 import {Dispatch} from 'redux';
@@ -18,22 +18,26 @@ import {TodoCreateModal} from '../Components/TodoCreateModal';
  * @prop {ITodoListActions} [actions] Экшены.
  * @prop {IAsyncData<ITodo>} [asyncData] Задача.
  * @prop {IAsyncData<ITodo[]>} [asyncDataList] Список задач.
+ * @prop {boolean} isLoading Состояние загрузки.
  */
 interface ITodoListProps {
     actions?: ITodoListActions;
     asyncData?: IAsyncData<ITodo>;
     asyncDataList?: IAsyncData<ITodo[]>;
+    isLoading: boolean;
 }
 
 export const TodoList = ({
     actions,
     asyncDataList,
     asyncData,
+    isLoading,
 }: ITodoListProps) => {
     const [showDetailsModal, setShowDetailsModal] =
         React.useState<boolean>(false);
     const [showCreateModal, setShowCreateModal] =
         React.useState<boolean>(false);
+    const [showEditModal, setShowEditModal] = React.useState<boolean>(false);
 
     /**
      * Обаотчик клика по задаче в списке.
@@ -89,12 +93,36 @@ export const TodoList = ({
         setShowDetailsModal(false);
     };
 
+    /**
+     * Обработчик кнопки редактировать.
+     */
+    const handleEditButtonClick = (): void => {
+        setShowDetailsModal(false);
+        setShowEditModal(true);
+    };
+
+    /**
+     * Обработчик закрытия модального окна редактирования.
+     */
+    const handleEditModalClose = (): void => {
+        setShowEditModal(false);
+    };
+
+    /**
+     * Обработчик сохранения при редактировании.
+     */
+    const handleEditSave = (todo: ITodo): void => {
+        actions.editTodo(todo);
+        setShowEditModal(false);
+        setShowDetailsModal(true);
+    };
+
     React.useEffect(() => {
         actions.getData();
     }, []);
 
     return (
-        <React.Fragment>
+        <Spin spinning={isLoading} tip={TextObject.TodoList.Loading}>
             {asyncDataList?.data ? (
                 <List
                     header={<div>{TextObject.TodoList.List.TODO}</div>}
@@ -112,6 +140,7 @@ export const TodoList = ({
                     onChange={handleStatusChange}
                     onClose={handleDetailsModalClose}
                     onDelete={handleDelete}
+                    onEdit={handleEditButtonClick}
                     todo={asyncData.data}
                 />
             ) : null}
@@ -121,6 +150,13 @@ export const TodoList = ({
                     onSave={handleCreateTodoClick}
                 />
             )}
+            {showEditModal && (
+                <TodoCreateModal
+                    todo={asyncData.data}
+                    onClose={handleEditModalClose}
+                    onSave={handleEditSave}
+                />
+            )}
             <Button
                 className="createButton"
                 type="primary"
@@ -128,13 +164,14 @@ export const TodoList = ({
                 icon={<PlusCircleOutlined />}
                 onClick={handleCreateButtonClick}
             />
-        </React.Fragment>
+        </Spin>
     );
 };
 
 const mapStateToProps = (store: IStore) => ({
     asyncData: store.todoListReducer.asyncData,
     asyncDataList: store.todoListReducer.asyncDataList,
+    isLoading: store.todoListReducer.isLoading,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({

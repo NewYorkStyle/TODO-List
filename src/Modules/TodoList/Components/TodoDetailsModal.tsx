@@ -10,12 +10,14 @@ import {TextObject} from '../Text';
  * @prop {Function} onChange Обработчик изменения статуса.
  * @prop {Function} onDelete Обработчик удаления задачи.
  * @prop {Function} onClose Обработчик закрытия модального окна.
+ * @prop {Function} onEdit Обработчик кнопки редактирования.
  * @prop {ITodo} todo Задача.
  */
 interface ITodoDetailsModalProps {
     onChange: (todo: ITodo) => void;
     onDelete: (todo: ITodo) => void;
     onClose: () => void;
+    onEdit: () => void;
     todo: ITodo;
 }
 
@@ -23,6 +25,7 @@ export const TodoDetailsModal = ({
     onChange,
     onClose,
     onDelete,
+    onEdit,
     todo,
     todo: {description, status, title},
 }: ITodoDetailsModalProps) => {
@@ -94,25 +97,29 @@ export const TodoDetailsModal = ({
         }
 
         config.unshift(
-            <Popconfirm
-                title={TextObject.TodoList.DetailsModal.Footer.PopConfirm.Title}
-                onConfirm={handleDelete}
-                okText={
-                    TextObject.TodoList.DetailsModal.Footer.PopConfirm.Confirm
-                }
-                cancelText={
-                    TextObject.TodoList.DetailsModal.Footer.PopConfirm.Cancle
-                }
-            >
-                <Button
-                    key="Delete"
-                    type="primary"
-                    danger
-                    className="deleteButton"
+            <div className="deleteButton">
+                <Popconfirm
+                    title={
+                        TextObject.TodoList.DetailsModal.Footer.PopConfirm.Title
+                    }
+                    onConfirm={handleDelete}
+                    okText={
+                        TextObject.TodoList.DetailsModal.Footer.PopConfirm
+                            .Confirm
+                    }
+                    cancelText={
+                        TextObject.TodoList.DetailsModal.Footer.PopConfirm
+                            .Cancle
+                    }
                 >
-                    {TextObject.TodoList.DetailsModal.Footer.Buttons.Delete}
+                    <Button key="Delete" type="primary" danger>
+                        {TextObject.TodoList.DetailsModal.Footer.Buttons.Delete}
+                    </Button>
+                </Popconfirm>
+                <Button key="edit" type="primary" onClick={onEdit}>
+                    {TextObject.TodoList.DetailsModal.Footer.Buttons.Edit}
                 </Button>
-            </Popconfirm>
+            </div>
         );
 
         return config;

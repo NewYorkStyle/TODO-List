@@ -1,40 +1,45 @@
 export const TextObject = {
     TodoList: {
-        List: {
-            TODO: 'TODO',
+        CreateModal: {
+            Placeholder: {
+                Description: 'Description',
+                Title: 'Title',
+            },
+            Priority: {
+                HIGH: 'HIGH',
+                LOW: 'LOW',
+                MEDIUM: 'MEDIUM',
+            },
+            Title: {
+                Create: 'Create TODO',
+                Edit: 'Edit TODO',
+            },
         },
         DetailsModal: {
-            Steps: {
-                TODO: 'TODO',
-                Doing: 'Doing',
-                Done: 'Done',
-            },
             Footer: {
                 Buttons: {
                     Close: 'Close',
                     Delete: 'Delete',
+                    Edit: 'Edit',
                     Finish: 'Finish',
                     Hold: 'Hold',
                     Start: 'Start',
                 },
                 PopConfirm: {
-                    Title: 'Are you sure to delete this task?',
-                    Confirm: 'Yes',
                     Cancle: 'No',
+                    Confirm: 'Yes',
+                    Title: 'Are you sure to delete this task?',
                 },
             },
-        },
-        CreateModal: {
-            Priority: {
-                LOW: 'LOW',
-                MEDIUM: 'MEDIUM',
-                HIGH: 'HIGH',
-            },
-            Title: 'Create TODO',
-            Placeholder: {
-                Title: 'Title',
-                Description: 'Description',
+            Steps: {
+                Doing: 'Doing',
+                Done: 'Done',
+                TODO: 'TODO',
             },
         },
+        List: {
+            TODO: 'TODO',
+        },
+        Loading: 'Loading...',
     },
 };

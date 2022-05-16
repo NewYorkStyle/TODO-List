@@ -13,22 +13,31 @@ import {TextObject} from '../Text';
 interface ITodoCreateModalProps {
     onClose: () => void;
     onSave: (todo: ITodo) => void;
+    todo?: ITodo;
 }
 
-export const TodoCreateModal = ({onClose, onSave}: ITodoCreateModalProps) => {
-    const [todo, setTodo] = React.useState<ITodo>({
-        description: null,
-        priority: EPriority.LOW,
-        status: EStatus.TODO,
-        title: null,
-    });
+export const TodoCreateModal = ({
+    onClose,
+    onSave,
+    todo,
+}: ITodoCreateModalProps) => {
+    const [newTodo, setNewTodo] = React.useState<ITodo>(
+        todo
+            ? todo
+            : {
+                  description: null,
+                  priority: EPriority.LOW,
+                  status: EStatus.TODO,
+                  title: null,
+              }
+    );
 
     /**
      * Обработчик изменения поля title.
      */
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setTodo({
-            ...todo,
+        setNewTodo({
+            ...newTodo,
             title: e.target.value,
         });
     };
@@ -39,8 +48,8 @@ export const TodoCreateModal = ({onClose, onSave}: ITodoCreateModalProps) => {
     const handleDescriptionChange = (
         e: React.ChangeEvent<HTMLTextAreaElement>
     ) => {
-        setTodo({
-            ...todo,
+        setNewTodo({
+            ...newTodo,
             description: e.target.value,
         });
     };
@@ -49,29 +58,31 @@ export const TodoCreateModal = ({onClose, onSave}: ITodoCreateModalProps) => {
      * Обработчик изменения поля priority.
      */
     const handlePriorityChange = (value: EPriority) => {
-        setTodo({
-            ...todo,
+        setNewTodo({
+            ...newTodo,
             priority: value,
         });
     };
 
     const handleSave = () => {
-        onSave(todo);
+        onSave(newTodo);
+    };
+
+    const getTitle = (): string => {
+        return todo
+            ? TextObject.TodoList.CreateModal.Title.Edit
+            : TextObject.TodoList.CreateModal.Title.Create;
     };
 
     return (
-        <Modal
-            title={TextObject.TodoList.CreateModal.Title}
-            visible
-            onOk={handleSave}
-            onCancel={onClose}
-        >
+        <Modal title={getTitle()} visible onOk={handleSave} onCancel={onClose}>
             <Space direction="vertical">
                 <Input
                     onChange={handleTitleChange}
                     placeholder={
                         TextObject.TodoList.CreateModal.Placeholder.Title
                     }
+                    value={newTodo.title}
                 />
                 <TextArea
                     onChange={handleDescriptionChange}
@@ -80,11 +91,13 @@ export const TodoCreateModal = ({onClose, onSave}: ITodoCreateModalProps) => {
                         TextObject.TodoList.CreateModal.Placeholder.Description
                     }
                     autoSize={{minRows: 3, maxRows: 5}}
+                    value={newTodo.description}
                 />
                 <Select
                     onChange={handlePriorityChange}
                     defaultValue={EPriority.LOW}
                     className="prioritySelect"
+                    value={newTodo.priority}
                 >
                     <Select.Option value={EPriority.LOW}>
                         {TextObject.TodoList.CreateModal.Priority.LOW}
