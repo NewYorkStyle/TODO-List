@@ -1,12 +1,14 @@
-import {applyMiddleware, combineReducers, createStore} from 'redux';
-import thunk from 'redux-thunk';
-import todoListReducer from './Modules/TodoList/Reducers/index';
+import {combineReducers, configureStore} from '@reduxjs/toolkit';
+import todoListSlice from './Modules/TodoList/Reducers';
 
-const store = createStore(
-    combineReducers({
-        todoListReducer: todoListReducer,
-    }),
-    applyMiddleware(thunk)
-);
+const rootReducer = combineReducers({
+    todoListReducer: todoListSlice,
+});
 
-export default store;
+export const setupStore = () =>
+    configureStore({
+        reducer: rootReducer,
+    });
+
+export type RootState = ReturnType<typeof rootReducer>;
+export type AppDispatch = ReturnType<typeof setupStore>['dispatch'];
