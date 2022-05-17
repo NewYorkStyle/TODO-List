@@ -6,44 +6,29 @@ import {
     QuestionCircleTwoTone,
 } from '@ant-design/icons';
 import * as React from 'react';
-import {connect} from 'react-redux';
-import {Dispatch} from 'redux';
-import {ITodoListActions, TodoListActions} from '../Actions/TodoListActions';
 import {TodoCard} from '../Components/TodoCard';
 import {TodoCreateModal} from '../Components/TodoCreateModal';
 import {TodoDetailsModal} from '../Components/TodoDetailsModal';
 import {EStatus} from '../Enums';
 import {ITodo} from '../Models';
-import {TodoListServices} from '../Services/TodoListServices';
 import {TextObject} from '../Text';
-import {IAsyncData, IStore} from '../../../Core/Models';
+import {useAppDispatch, useAppSelector} from '../../../Core/ReduxHooks';
+import {TodoListActions} from '../Actions/TodoListActions';
+import {TodoListServices} from '../Services/TodoListServices';
 
-/**
- * Модель props на компонента TodoList.
- *
- * @prop {ITodoListActions} [actions] Экшены.
- * @prop {IAsyncData<ITodo>} [asyncData] Задача.
- * @prop {IAsyncData<ITodo[]>} [asyncDataList] Список задач.
- * @prop {boolean} isLoading Состояние загрузки.
- */
-interface ITodoListProps {
-    actions?: ITodoListActions;
-    asyncData?: IAsyncData<ITodo>;
-    asyncDataList?: IAsyncData<ITodo[]>;
-    isLoading: boolean;
-}
-
-export const TodoList = ({
-    actions,
-    asyncData,
-    asyncDataList,
-    isLoading,
-}: ITodoListProps) => {
+export const TodoList = () => {
     const [showDetailsModal, setShowDetailsModal] =
         React.useState<boolean>(false);
     const [showCreateModal, setShowCreateModal] =
         React.useState<boolean>(false);
     const [showEditModal, setShowEditModal] = React.useState<boolean>(false);
+
+    const {asyncData, asyncDataList, isLoading} = useAppSelector(
+        (state) => state.todoListReducer
+    );
+
+    const dispatch = useAppDispatch();
+    const actions = new TodoListActions(dispatch, new TodoListServices());
 
     /**
      * Обаотчик клика по задаче в списке.
@@ -241,14 +226,4 @@ export const TodoList = ({
     );
 };
 
-const mapStateToProps = (store: IStore) => ({
-    asyncData: store.todoListReducer.asyncData,
-    asyncDataList: store.todoListReducer.asyncDataList,
-    isLoading: store.todoListReducer.isLoading,
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-    actions: new TodoListActions(dispatch, new TodoListServices()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(TodoList);
+export default TodoList;
