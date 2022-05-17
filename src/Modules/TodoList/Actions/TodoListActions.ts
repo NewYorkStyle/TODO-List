@@ -1,13 +1,19 @@
-import {Dispatch} from 'redux';
-import {ActionsTypes} from './ActionTypes';
 import {ITodo} from '../Models';
 import {ITodoListServices} from '../Services/TodoListServices';
 import {IAsyncData} from '../../../Core/Models';
+import {
+    getDataListSuccess,
+    getDataListFailure,
+    startLoading,
+    getDataFailure,
+    getDataSuccess,
+} from '../Reducers';
+import {Dispatch} from '@reduxjs/toolkit';
 
 /**
  * Интерфейс экшенов для работы с модулем TodoList.
  */
-export interface ITodoListActions {
+interface ITodoListActions {
     /**
      * Получение списка задач.
      */
@@ -58,22 +64,14 @@ export class TodoListActions implements ITodoListActions {
      * @inheritdoc
      */
     getData = () => {
-        this.dispatch({
-            type: ActionsTypes.GET_DATA_START,
-        });
+        this.dispatch(startLoading());
         this.service.getData().then(
             (response: IAsyncData<ITodo[]>) => {
-                this.dispatch({
-                    type: ActionsTypes.GET_DATA_LIST_SUCCESS,
-                    payload: response.data,
-                });
+                this.dispatch(getDataListSuccess(response.data));
             },
             (error: string) => {
                 console.log(error);
-                this.dispatch({
-                    type: ActionsTypes.GET_DATA_LIST_FAILURE,
-                    payload: error,
-                });
+                this.dispatch(getDataListFailure(error));
             }
         );
     };
@@ -82,22 +80,14 @@ export class TodoListActions implements ITodoListActions {
      * @inheritdoc
      */
     getDataByID = (id: string) => {
-        this.dispatch({
-            type: ActionsTypes.GET_DATA_START,
-        });
+        this.dispatch(startLoading());
         this.service.getDataByID(id).then(
             (response: IAsyncData<ITodo>) => {
-                this.dispatch({
-                    type: ActionsTypes.GET_DATA_SUCCESS,
-                    payload: response.data,
-                });
+                this.dispatch(getDataSuccess(response.data));
             },
             (error: string) => {
                 console.log(error);
-                this.dispatch({
-                    type: ActionsTypes.GET_DATA_FAILURE,
-                    payload: error,
-                });
+                this.dispatch(getDataFailure(error));
             }
         );
     };
@@ -106,19 +96,14 @@ export class TodoListActions implements ITodoListActions {
      * @inheritdoc
      */
     createTodo = (todo: ITodo) => {
-        this.dispatch({
-            type: ActionsTypes.GET_DATA_START,
-        });
+        this.dispatch(startLoading());
         this.service.createTodo(todo).then(
             () => {
                 this.getData();
             },
             (error: string) => {
                 console.log(error);
-                this.dispatch({
-                    type: ActionsTypes.GET_DATA_FAILURE,
-                    payload: error,
-                });
+                this.dispatch(getDataFailure(error));
             }
         );
     };
@@ -127,9 +112,7 @@ export class TodoListActions implements ITodoListActions {
      * @inheritdoc
      */
     editTodo = (todo: ITodo) => {
-        this.dispatch({
-            type: ActionsTypes.GET_DATA_START,
-        });
+        this.dispatch(startLoading());
         this.service.editTodo(todo).then(
             () => {
                 this.getData();
@@ -137,10 +120,7 @@ export class TodoListActions implements ITodoListActions {
             },
             (error: string) => {
                 console.log(error);
-                this.dispatch({
-                    type: ActionsTypes.GET_DATA_FAILURE,
-                    payload: error,
-                });
+                this.dispatch(getDataFailure(error));
             }
         );
     };
@@ -149,19 +129,14 @@ export class TodoListActions implements ITodoListActions {
      * @inheritdoc
      */
     deleteTodo = (todo: ITodo) => {
-        this.dispatch({
-            type: ActionsTypes.GET_DATA_START,
-        });
+        this.dispatch(startLoading());
         this.service.deleteTodo(todo).then(
             () => {
                 this.getData();
             },
             (error: string) => {
                 console.log(error);
-                this.dispatch({
-                    type: ActionsTypes.GET_DATA_FAILURE,
-                    payload: error,
-                });
+                this.dispatch(getDataFailure(error));
             }
         );
     };
