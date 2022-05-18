@@ -2,9 +2,10 @@ export const TextObject = {
     TodoList: {
         CreateModal: {
             Placeholder: {
-                Description: 'Description',
-                Title: 'Title',
+                Description: 'Enter a description',
+                Title: 'Enter the title',
             },
+            Label: {Description: 'Description', Title: 'Title'},
             Priority: {
                 HIGH: 'HIGH',
                 LOW: 'LOW',
