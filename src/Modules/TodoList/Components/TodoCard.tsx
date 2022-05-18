@@ -3,6 +3,7 @@ import {BaseType} from 'antd/lib/typography/Base';
 import * as React from 'react';
 import {EMarkType, EPriority} from '../Enums';
 import {ITodo} from '../Models';
+import {TextObject} from '../Text';
 
 /**
  * Модель props на компонента TodoCard.
@@ -43,10 +44,27 @@ export const TodoCard = ({
         }
     };
 
+    /**
+     * Получение текста соответствующего приоритету задачи.
+     *
+     * @param {EPriority} priority Приоритет задачи.
+     */
+    const getPriorityText = (priority: EPriority): string => {
+        switch (priority) {
+            case EPriority.HIGH:
+                return TextObject.TodoList.List.PriorityMark.HIGH;
+            case EPriority.MEDIUM:
+                return TextObject.TodoList.List.PriorityMark.MEDIUM;
+            case EPriority.LOW:
+            default:
+                return TextObject.TodoList.List.PriorityMark.LOW;
+        }
+    };
+
     return (
         <div onClick={handleOnClick}>
             <Typography.Text type={getPriorityMark(priority)}>
-                [{priority}]
+                [{getPriorityText(priority)}]
             </Typography.Text>
             {title}
         </div>

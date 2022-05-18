@@ -1,1 +1,1 @@
-json-server --watch --delay 500 DB.json
+json-server --watch --delay 500 DB.json --routes routes.json

@@ -1,18 +1,67 @@
 {
     "todo": [
         {
-            "description": "Сделать приложение для контроля за списком дел (TODO-List)",
-            "priority": "HIGH",
-            "status": "TODO",
-            "title": "TODO List",
-            "id": "Mqw-2SQ"
+            "description": "Добавить изменение статуса задачи по ЖЦ\nTodo -> Doing\nDoing -> Done\nDoing -> Todo\nDone -> Doing",
+            "priority": 1,
+            "status": "DONE",
+            "title": "Изменение статуса",
+            "id": "mFuKaBh"
         },
         {
-            "description": "Отдать долг родине",
-            "priority": "HIGH",
+            "description": "Добавить редактирование задач",
+            "priority": 1,
+            "status": "DONE",
+            "title": "Редактирование",
+            "id": "ni3hHEF"
+        },
+        {
+            "description": "Добавить обработку ошибок (если с сервера ничего не пришло)",
+            "priority": 2,
+            "status": "TODO",
+            "title": "Обработка ошибок",
+            "id": "bN3v9Qa"
+        },
+        {
+            "description": "Реализовать разделение на три колонки в соответствии с текущим статусом (TODO | DOING | DONE)",
+            "priority": 0,
+            "status": "DONE",
+            "title": "Три колонки",
+            "id": "c8ZKNn5"
+        },
+        {
+            "description": "Добавить удаление задач",
+            "priority": 1,
+            "status": "DONE",
+            "title": "Удаление",
+            "id": "Kt9Um12"
+        },
+        {
+            "description": "Причесать код",
+            "priority": 0,
+            "status": "DONE",
+            "title": "Рефакторинг",
+            "id": "n0GoLue"
+        },
+        {
+            "description": "Добавить валидацию для полей при создании/редактировании",
+            "priority": 1,
+            "status": "TODO",
+            "title": "Валидация",
+            "id": "cqnZVEx"
+        },
+        {
+            "description": "test",
+            "priority": 0,
+            "status": "TODO",
+            "title": "test",
+            "id": "8KfwMzB"
+        },
+        {
+            "description": "Добавить библиотеку ReduxToolkit",
+            "priority": 1,
             "status": "DOING",
-            "title": "Отслужить",
-            "id": "1vpkduo"
+            "title": "ReduxToolkit",
+            "id": "W1ikzwz"
         }
     ]
 }
