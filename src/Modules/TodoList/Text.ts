@@ -39,9 +39,8 @@ export const TextObject = {
             },
         },
         List: {
-            Doing: 'Doing',
-            Done: 'Done',
-            TODO: 'TODO',
+            ColumnTitle: {Doing: 'Doing', Done: 'Done', TODO: 'TODO'},
+            PriorityMark: {HIGH: 'HIGH', MEDIUM: 'MEDIUM', LOW: 'LOW'},
         },
         Loading: 'Loading...',
     },
