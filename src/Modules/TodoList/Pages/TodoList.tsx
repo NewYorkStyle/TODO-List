@@ -136,7 +136,7 @@ export const TodoList = () => {
                             header={
                                 <b>
                                     <QuestionCircleTwoTone />{' '}
-                                    {TextObject.TodoList.List.TODO}
+                                    {TextObject.TodoList.List.ColumnTitle.TODO}
                                 </b>
                             }
                             renderItem={(item) => (
@@ -157,7 +157,7 @@ export const TodoList = () => {
                             header={
                                 <b>
                                     <FireTwoTone />{' '}
-                                    {TextObject.TodoList.List.Doing}
+                                    {TextObject.TodoList.List.ColumnTitle.Doing}
                                 </b>
                             }
                             renderItem={(item) => (
@@ -178,7 +178,7 @@ export const TodoList = () => {
                             header={
                                 <b>
                                     <CheckCircleTwoTone />{' '}
-                                    {TextObject.TodoList.List.Done}
+                                    {TextObject.TodoList.List.ColumnTitle.Done}
                                 </b>
                             }
                             renderItem={(item) => (
