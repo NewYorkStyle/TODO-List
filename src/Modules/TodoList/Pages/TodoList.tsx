@@ -12,23 +12,30 @@ import {TodoDetailsModal} from '../Components/TodoDetailsModal';
 import {EStatus} from '../Enums';
 import {ITodo} from '../Models';
 import {TextObject} from '../Text';
-import {useAppDispatch, useAppSelector} from '../../../Core/ReduxHooks';
-import {TodoListActions} from '../Actions/TodoListActions';
-import {TodoListServices} from '../Services/TodoListServices';
+import {inject, observer} from 'mobx-react';
+import {StoreProps} from '../../../Mobx/store';
 
-export const TodoList = () => {
+interface IProps extends StoreProps {}
+
+const TodoList = observer((props: IProps) => {
+    const {
+        todoStore: {
+            asyncData,
+            asyncDataList,
+            isLoading,
+            createTodo,
+            getData,
+            getDataByID,
+            editTodo,
+            deleteTodo,
+        },
+    } = props;
+
     const [showDetailsModal, setShowDetailsModal] =
         React.useState<boolean>(false);
     const [showCreateModal, setShowCreateModal] =
         React.useState<boolean>(false);
     const [showEditModal, setShowEditModal] = React.useState<boolean>(false);
-
-    const {asyncData, asyncDataList, isLoading} = useAppSelector(
-        (state) => state.todoListReducer
-    );
-
-    const dispatch = useAppDispatch();
-    const actions = new TodoListActions(dispatch, new TodoListServices());
 
     /**
      * Обаотчик клика по задаче в списке.
@@ -36,7 +43,7 @@ export const TodoList = () => {
      * @param {string} id Идентификатор.
      */
     const handleCardOnClick = (id: string): void => {
-        actions.getDataByID(id);
+        getDataByID(id);
         setShowDetailsModal(true);
     };
 
@@ -65,7 +72,7 @@ export const TodoList = () => {
      * Обработчик создания TODO.
      */
     const handleCreateTodoClick = (todo: ITodo): void => {
-        actions.createTodo(todo);
+        createTodo(todo);
         setShowCreateModal(false);
     };
 
@@ -73,14 +80,14 @@ export const TodoList = () => {
      * Обработчик изменения статуса TODO.
      */
     const handleStatusChange = (todo: ITodo): void => {
-        actions.editTodo(todo);
+        editTodo(todo);
     };
 
     /**
      * Обработчик удаления TODO.
      */
     const handleDelete = (todo: ITodo): void => {
-        actions.deleteTodo(todo);
+        deleteTodo(todo);
         setShowDetailsModal(false);
     };
 
@@ -103,24 +110,24 @@ export const TodoList = () => {
      * Обработчик сохранения при редактировании.
      */
     const handleEditSave = (todo: ITodo): void => {
-        actions.editTodo(todo);
+        editTodo(todo);
         setShowEditModal(false);
         setShowDetailsModal(true);
     };
 
     React.useEffect(() => {
-        actions.getData();
+        getData();
     }, []);
 
-    const todoList = asyncDataList?.data?.filter((todo) => {
+    const todoList = asyncDataList?.data?.filter((todo: any) => {
         return todo.status === EStatus.TODO;
     });
 
-    const doingList = asyncDataList?.data?.filter((todo) => {
+    const doingList = asyncDataList?.data?.filter((todo: any) => {
         return todo.status === EStatus.DOING;
     });
 
-    const doneList = asyncDataList?.data?.filter((todo) => {
+    const doneList = asyncDataList?.data?.filter((todo: any) => {
         return todo.status === EStatus.DONE;
     });
 
@@ -139,7 +146,7 @@ export const TodoList = () => {
                                     {TextObject.TodoList.List.ColumnTitle.TODO}
                                 </b>
                             }
-                            renderItem={(item) => (
+                            renderItem={(item: any) => (
                                 <List.Item key={item.id}>
                                     <TodoCard
                                         onClick={handleCardOnClick}
@@ -160,7 +167,7 @@ export const TodoList = () => {
                                     {TextObject.TodoList.List.ColumnTitle.Doing}
                                 </b>
                             }
-                            renderItem={(item) => (
+                            renderItem={(item: any) => (
                                 <List.Item key={item.id}>
                                     <TodoCard
                                         onClick={handleCardOnClick}
@@ -181,7 +188,7 @@ export const TodoList = () => {
                                     {TextObject.TodoList.List.ColumnTitle.Done}
                                 </b>
                             }
-                            renderItem={(item) => (
+                            renderItem={(item: any) => (
                                 <List.Item key={item.id}>
                                     <TodoCard
                                         onClick={handleCardOnClick}
@@ -224,6 +231,6 @@ export const TodoList = () => {
             />
         </Spin>
     );
-};
+});
 
-export default TodoList;
+export default inject('todoStore')(TodoList);
