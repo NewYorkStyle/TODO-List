@@ -24,3 +24,11 @@ export enum EMarkType {
     MEDIUM = 'warning',
     LOW = 'success',
 }
+
+/**
+ * Поддерживаемые языки.
+ */
+export enum ELanguage {
+    EN = 'en',
+    RU = 'ru'
+}

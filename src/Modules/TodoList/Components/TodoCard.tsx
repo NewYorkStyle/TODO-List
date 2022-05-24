@@ -1,32 +1,22 @@
 import {Typography} from 'antd';
 import {BaseType} from 'antd/lib/typography/Base';
 import * as React from 'react';
+import {TFunction} from 'react-i18next';
 import {EMarkType, EPriority} from '../Enums';
 import {ITodo} from '../Models';
-import {TextObject} from '../Text';
 
 /**
  * Модель props на компонента TodoCard.
  *
- * @prop {Function} onClick Обработчик клика.
+ * @prop {TFunction} t Функция перевода.
  * @prop {ITodo} todo Задача.
  */
 interface ITodoCardProps {
-    onClick: (id: string) => void;
+    t: TFunction;
     todo: ITodo;
 }
 
-export const TodoCard = ({
-    onClick,
-    todo: {id, priority, title},
-}: ITodoCardProps) => {
-    /**
-     * Обработчик клика.
-     */
-    const handleOnClick = () => {
-        onClick(id);
-    };
-
+export const TodoCard = ({t, todo: {priority, title}}: ITodoCardProps) => {
     /**
      * Получение маркера соответствующего приоритету задачи.
      *
@@ -52,17 +42,17 @@ export const TodoCard = ({
     const getPriorityText = (priority: EPriority): string => {
         switch (priority) {
             case EPriority.HIGH:
-                return TextObject.TodoList.List.PriorityMark.HIGH;
+                return t('TodoList:List.PriorityMark.HIGH');
             case EPriority.MEDIUM:
-                return TextObject.TodoList.List.PriorityMark.MEDIUM;
+                return t('TodoList:List.PriorityMark.MEDIUM');
             case EPriority.LOW:
             default:
-                return TextObject.TodoList.List.PriorityMark.LOW;
+                return t('TodoList:List.PriorityMark.LOW');
         }
     };
 
     return (
-        <div onClick={handleOnClick}>
+        <div>
             <Typography.Text type={getPriorityMark(priority)}>
                 [{getPriorityText(priority)}]
             </Typography.Text>

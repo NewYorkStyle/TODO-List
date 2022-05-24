@@ -1,4 +1,4 @@
-import {Button, Col, List, Row, Spin} from 'antd';
+import {Button, Col, Empty, List, Row, Select, Spin} from 'antd';
 import {
     CheckCircleTwoTone,
     FireTwoTone,
@@ -9,12 +9,13 @@ import * as React from 'react';
 import {TodoCard} from '../Components/TodoCard';
 import {TodoCreateModal} from '../Components/TodoCreateModal';
 import {TodoDetailsModal} from '../Components/TodoDetailsModal';
-import {EStatus} from '../Enums';
+import {ELanguage, EStatus} from '../Enums';
 import {ITodo} from '../Models';
-import {TextObject} from '../Text';
 import {useAppDispatch, useAppSelector} from '../../../Core/ReduxHooks';
 import {TodoListActions} from '../Actions/TodoListActions';
 import {TodoListServices} from '../Services/TodoListServices';
+import {useTranslation} from 'react-i18next';
+import {changeLanguage} from 'i18next';
 
 export const TodoList = () => {
     const [showDetailsModal, setShowDetailsModal] =
@@ -27,8 +28,12 @@ export const TodoList = () => {
         (state) => state.todoListReducer
     );
 
-    const dispatch = useAppDispatch();
-    const actions = new TodoListActions(dispatch, new TodoListServices());
+    const actions = new TodoListActions(
+        useAppDispatch(),
+        new TodoListServices()
+    );
+
+    const {t} = useTranslation();
 
     /**
      * Обаотчик клика по задаче в списке.
@@ -108,6 +113,15 @@ export const TodoList = () => {
         setShowDetailsModal(true);
     };
 
+    /**
+     * Обработчик выбора языка.
+     *
+     * @param {ELanguage} value Значение селекта.
+     */
+    const handleLanguageChange = (value: ELanguage) => {
+        changeLanguage(value);
+    };
+
     React.useEffect(() => {
         actions.getData();
     }, []);
@@ -125,7 +139,7 @@ export const TodoList = () => {
     });
 
     return (
-        <Spin spinning={isLoading} tip={TextObject.TodoList.Loading}>
+        <Spin spinning={isLoading} tip={t('TodoList:Loading')}>
             {asyncDataList?.data ? (
                 <Row>
                     <Col span={8}>
@@ -136,15 +150,15 @@ export const TodoList = () => {
                             header={
                                 <b>
                                     <QuestionCircleTwoTone />{' '}
-                                    {TextObject.TodoList.List.ColumnTitle.TODO}
+                                    {t('TodoList:List.ColumnTitle.Doing')}
                                 </b>
                             }
                             renderItem={(item) => (
-                                <List.Item key={item.id}>
-                                    <TodoCard
-                                        onClick={handleCardOnClick}
-                                        todo={item}
-                                    />
+                                <List.Item
+                                    key={item.id}
+                                    onClick={() => handleCardOnClick(item.id)}
+                                >
+                                    <TodoCard t={t} todo={item} />
                                 </List.Item>
                             )}
                         />
@@ -157,15 +171,15 @@ export const TodoList = () => {
                             header={
                                 <b>
                                     <FireTwoTone />{' '}
-                                    {TextObject.TodoList.List.ColumnTitle.Doing}
+                                    {t('TodoList:List.ColumnTitle.Doing')}
                                 </b>
                             }
                             renderItem={(item) => (
-                                <List.Item key={item.id}>
-                                    <TodoCard
-                                        onClick={handleCardOnClick}
-                                        todo={item}
-                                    />
+                                <List.Item
+                                    key={item.id}
+                                    onClick={() => handleCardOnClick(item.id)}
+                                >
+                                    <TodoCard t={t} todo={item} />
                                 </List.Item>
                             )}
                         />
@@ -178,27 +192,30 @@ export const TodoList = () => {
                             header={
                                 <b>
                                     <CheckCircleTwoTone />{' '}
-                                    {TextObject.TodoList.List.ColumnTitle.Done}
+                                    {t('TodoList:List.ColumnTitle.Doing')}
                                 </b>
                             }
                             renderItem={(item) => (
-                                <List.Item key={item.id}>
-                                    <TodoCard
-                                        onClick={handleCardOnClick}
-                                        todo={item}
-                                    />
+                                <List.Item
+                                    key={item.id}
+                                    onClick={() => handleCardOnClick(item.id)}
+                                >
+                                    <TodoCard t={t} todo={item} />
                                 </List.Item>
                             )}
                         />
                     </Col>
                 </Row>
-            ) : null}
+            ) : (
+                <Empty description={t('TodoList:NoData')} />
+            )}
             {showDetailsModal && asyncData?.data ? (
                 <TodoDetailsModal
                     onChange={handleStatusChange}
                     onClose={handleDetailsModalClose}
                     onDelete={handleDelete}
                     onEdit={handleEditButtonClick}
+                    t={t}
                     todo={asyncData.data}
                 />
             ) : null}
@@ -206,12 +223,14 @@ export const TodoList = () => {
                 <TodoCreateModal
                     onClose={handleCreateModalClose}
                     onSave={handleCreateTodoClick}
+                    t={t}
                 />
             )}
             {showEditModal && (
                 <TodoCreateModal
                     onClose={handleEditModalClose}
                     onSave={handleEditSave}
+                    t={t}
                     todo={asyncData.data}
                 />
             )}
@@ -222,6 +241,18 @@ export const TodoList = () => {
                 shape="circle"
                 type="primary"
             />
+            <Select
+                className="languageChange"
+                defaultValue={ELanguage.EN}
+                onChange={handleLanguageChange}
+            >
+                <Select.Option value={ELanguage.EN}>
+                    {t('Common:Eng')}
+                </Select.Option>
+                <Select.Option value={ELanguage.RU}>
+                    {t('Common:Rus')}
+                </Select.Option>
+            </Select>
         </Spin>
     );
 };

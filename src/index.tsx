@@ -6,6 +6,7 @@ import TodoList from './Modules/TodoList/Pages/TodoList';
 import 'antd/dist/antd.css';
 import './Styles/TodoList.css';
 import {setupStore} from './Store';
+import './i18n';
 
 const store = setupStore();
 const root = ReactDOM.createRoot(document.getElementById('root'));

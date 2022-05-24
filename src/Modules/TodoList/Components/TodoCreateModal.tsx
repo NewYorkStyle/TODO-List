@@ -1,26 +1,29 @@
 import {Form, Input, Modal, Select, Space} from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import * as React from 'react';
+import {TFunction} from 'react-i18next';
 import {EPriority, EStatus} from '../Enums';
 import {ITodo} from '../Models';
-import {TextObject} from '../Text';
 
 /**
  * Модель props на компонента TodoCreateModal.
  *
  * @prop {Function} onClose Обработчик закрытия модального окна.
  * @prop {Function} onSave Обработчик создания/сохранения.
+ * @prop {TFunction} t Функция перевода.
  * @prop {ITodo} todo Задача.
  */
 interface ITodoCreateModalProps {
     onClose: () => void;
     onSave: (todo: ITodo) => void;
+    t: TFunction;
     todo?: ITodo;
 }
 
 export const TodoCreateModal = ({
     onClose,
     onSave,
+    t,
     todo,
 }: ITodoCreateModalProps) => {
     const [newTodo, setNewTodo] = React.useState<ITodo>(
@@ -80,17 +83,17 @@ export const TodoCreateModal = ({
      */
     const getTitle = (): string => {
         return todo
-            ? TextObject.TodoList.CreateModal.Title.Edit
-            : TextObject.TodoList.CreateModal.Title.Create;
+            ? t('TodoList:CreateModal.Title.Edit')
+            : t('TodoList:CreateModal.Title.Create');
     };
 
     const [form] = Form.useForm();
 
     return (
         <Modal
+            cancelText={t('TodoList:CreateModal.Buttons.Cancel')}
+            okText={t('TodoList:CreateModal.Buttons.Ok')}
             onCancel={onClose}
-            title={getTitle()}
-            visible
             onOk={() => {
                 form.validateFields()
                     .then(() => {
@@ -101,43 +104,46 @@ export const TodoCreateModal = ({
                         console.log('Validate Failed:', info);
                     });
             }}
+            title={getTitle()}
+            visible
         >
             <Form form={form} layout="vertical" name="createTodoFOrm">
                 <Form.Item
                     name="title"
-                    label={TextObject.TodoList.CreateModal.Label.Title}
+                    label={t('TodoList:CreateModal.Label.Title')}
                     rules={[
                         {
                             required: true,
-                            message: 'Please input the title of TODO!',
+                            message: t('TodoList:CreateModal.Validation.Title'),
                         },
                     ]}
                 >
                     <Input
                         onChange={handleTitleChange}
-                        placeholder={
-                            TextObject.TodoList.CreateModal.Placeholder.Title
-                        }
+                        placeholder={t(
+                            'TodoList:CreateModal.Placeholder.Title'
+                        )}
                         value={newTodo.title}
                     />
                 </Form.Item>
                 <Form.Item
                     name="description"
-                    label={TextObject.TodoList.CreateModal.Label.Description}
+                    label={t('TodoList:CreateModal.Label.Description')}
                     rules={[
                         {
                             required: true,
-                            message: 'Please input a description of TODO!',
+                            message: t(
+                                'TodoList:CreateModal.Validation.Description'
+                            ),
                         },
                     ]}
                 >
                     <TextArea
                         autoSize={{minRows: 3, maxRows: 5}}
                         onChange={handleDescriptionChange}
-                        placeholder={
-                            TextObject.TodoList.CreateModal.Placeholder
-                                .Description
-                        }
+                        placeholder={t(
+                            'TodoList:CreateModal.Placeholder.Description'
+                        )}
                         value={newTodo.description}
                     />
                 </Form.Item>
@@ -148,13 +154,13 @@ export const TodoCreateModal = ({
                     value={newTodo.priority}
                 >
                     <Select.Option value={EPriority.LOW}>
-                        {TextObject.TodoList.CreateModal.Priority.LOW}
+                        {t('TodoList:CreateModal.Priority.LOW')}
                     </Select.Option>
                     <Select.Option value={EPriority.MEDIUM}>
-                        {TextObject.TodoList.CreateModal.Priority.MEDIUM}
+                        {t('TodoList:CreateModal.Priority.MEDIUM')}
                     </Select.Option>
                     <Select.Option value={EPriority.HIGH}>
-                        {TextObject.TodoList.CreateModal.Priority.HIGH}
+                        {t('TodoList:CreateModal.Priority.HIGH')}
                     </Select.Option>
                 </Select>
             </Form>

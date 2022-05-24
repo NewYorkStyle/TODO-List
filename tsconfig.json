@@ -11,7 +11,8 @@
             "es2017",
             "dom",
             "es2018.promise"
-        ]
+        ],
+        "resolveJsonModule": true
     },
     "include": [
         "src/**/*"
