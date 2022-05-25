@@ -4,12 +4,14 @@
     bottom: 20px;
 }
 
-.prioritySelect {
-    width: 100px;
+.languageChange {
+    position: fixed;
+    right: 60px;
+    bottom: 20px;
 }
 
-.description {
-    width: 400px;
+.prioritySelect {
+    width: 100px;
 }
 
 .deleteButton {

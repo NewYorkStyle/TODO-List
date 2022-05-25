@@ -11,9 +11,9 @@ export enum EStatus {
  * Приоритеты задач.
  */
 export enum EPriority {
-    HIGH = 'HIGH',
-    MEDIUM = 'MEDIUM',
-    LOW = 'LOW',
+    HIGH = 2,
+    MEDIUM = 1,
+    LOW = 0,
 }
 
 /**
@@ -23,4 +23,12 @@ export enum EMarkType {
     HIGH = 'danger',
     MEDIUM = 'warning',
     LOW = 'success',
+}
+
+/**
+ * Поддерживаемые языки.
+ */
+export enum ELanguage {
+    EN = 'en',
+    RU = 'ru'
 }

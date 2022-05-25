@@ -1,0 +1,65 @@
+{
+    "CreateModal": {
+        "Buttons": {
+            "Cancel": "Cancel",
+            "Ok": "Ok"
+        },
+        "Validation": {
+            "Description": "Пожалуйста, введите описание задачи!",
+            "Title": "Пожалуйста, введите заголовок задачи!"
+        },
+        "Label": {
+            "Description": "Описание",
+            "Title": "Заголовок"
+        },
+        "Placeholder": {
+            "Description": "Введите описание",
+            "Title": "Введите заголовок"
+        },
+        "Priority": {
+            "HIGH": "Высокий",
+            "LOW": "Низкий",
+            "MEDIUM": "Средний"
+        },
+        "Title": {
+            "Create": "Добавить задачу",
+            "Edit": "Редактировать задачу"
+        }
+    },
+    "DetailsModal": {
+        "Footer": {
+            "Buttons": {
+                "Close": "Закрыть",
+                "Delete": "Удалить",
+                "Edit": "Редактировать",
+                "Finish": "Завершить",
+                "Hold": "Отложить",
+                "Start": "Начать"
+            },
+            "PopConfirm": {
+                "Cancle": "Нет",
+                "Confirm": "Да",
+                "Title": "Вы действительно хотите удалить эту задачу?"
+            }
+        },
+        "Steps": {
+            "Doing": "В процессе",
+            "Done": "Выполнена",
+            "TODO": "TODO"
+        }
+    },
+    "List": {
+        "ColumnTitle": {
+            "Doing": "В процессе",
+            "Done": "Выполнена",
+            "TODO": "TODO"
+        },
+        "PriorityMark": {
+            "HIGH": "Высокий",
+            "LOW": "Низкий",
+            "MEDIUM": "Средний"
+        }
+    },
+    "Loading": "Загрузка...",
+    "NoData": "Нет данных"
+}

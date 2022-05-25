@@ -1,0 +1,65 @@
+{
+    "CreateModal": {
+        "Buttons": {
+            "Cancel": "Отмена",
+            "Ok": "Ок"
+        },
+        "Validation": {
+            "Description": "Please input a description of TODO!",
+            "Title": "Please input the title of TODO!"
+        },
+        "Label": {
+            "Description": "Description",
+            "Title": "Title"
+        },
+        "Placeholder": {
+            "Description": "Enter a description",
+            "Title": "Enter the title"
+        },
+        "Priority": {
+            "HIGH": "HIGH",
+            "LOW": "LOW",
+            "MEDIUM": "MEDIUM"
+        },
+        "Title": {
+            "Create": "Create TODO",
+            "Edit": "Edit TODO"
+        }
+    },
+    "DetailsModal": {
+        "Footer": {
+            "Buttons": {
+                "Close": "Close",
+                "Delete": "Delete",
+                "Edit": "Edit",
+                "Finish": "Finish",
+                "Hold": "Hold",
+                "Start": "Start"
+            },
+            "PopConfirm": {
+                "Cancle": "No",
+                "Confirm": "Yes",
+                "Title": "Are you sure to delete this task?"
+            }
+        },
+        "Steps": {
+            "Doing": "Doing",
+            "Done": "Done",
+            "TODO": "TODO"
+        }
+    },
+    "List": {
+        "ColumnTitle": {
+            "Doing": "Doing",
+            "Done": "Done",
+            "TODO": "TODO"
+        },
+        "PriorityMark": {
+            "HIGH": "HIGH",
+            "LOW": "LOW",
+            "MEDIUM": "MEDIUM"
+        }
+    },
+    "Loading": "Loading...",
+    "NoData": "No data"
+}

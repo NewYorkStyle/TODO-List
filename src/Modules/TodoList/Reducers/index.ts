@@ -1,6 +1,5 @@
-import {ActionsTypes} from '../Actions/ActionTypes';
-import {ITodoListStore} from '../Models';
-import {IAction} from '../../../Core/Models';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {ITodo, ITodoListStore} from '../Models';
 
 const initialState: ITodoListStore = {
     asyncData: {
@@ -14,51 +13,38 @@ const initialState: ITodoListStore = {
     isLoading: false,
 };
 
-const todoListReducer = (
-    state = initialState,
-    action: IAction
-): ITodoListStore => {
-    switch (action.type) {
-        case ActionsTypes.GET_DATA_LIST_SUCCESS:
-            return {
-                ...state,
-                asyncDataList: {
-                    data: action.payload,
-                },
-                isLoading: false,
-            };
-        case ActionsTypes.GET_DATA_LIST_FAILURE:
-            return {
-                ...state,
-                asyncDataList: {
-                    errorMsg: action.payload,
-                },
-                isLoading: false,
-            };
-        case ActionsTypes.GET_DATA_START:
-            return {
-                ...state,
-                isLoading: true,
-            };
-        case ActionsTypes.GET_DATA_SUCCESS:
-            return {
-                ...state,
-                asyncData: {
-                    data: action.payload,
-                },
-                isLoading: false,
-            };
-        case ActionsTypes.GET_DATA_FAILURE:
-            return {
-                ...state,
-                asyncData: {
-                    errorMsg: action.payload,
-                },
-                isLoading: false,
-            };
-        default:
-            return state;
-    }
-};
+const todoListSlice = createSlice({
+    name: 'TodoList',
+    initialState: initialState,
+    reducers: {
+        startLoading(state) {
+            state.isLoading = true;
+        },
+        getDataSuccess(state, action: PayloadAction<ITodo>) {
+            state.asyncData.data = action.payload;
+            state.isLoading = false;
+        },
+        getDataFailure(state, action: PayloadAction<string>) {
+            state.asyncData.errorMsg = action.payload;
+            state.isLoading = false;
+        },
+        getDataListSuccess(state, action: PayloadAction<ITodo[]>) {
+            state.asyncDataList.data = action.payload;
+            state.isLoading = false;
+        },
+        getDataListFailure(state, action: PayloadAction<string>) {
+            state.asyncDataList.errorMsg = action.payload;
+            state.isLoading = false;
+        },
+    },
+});
 
-export default todoListReducer;
+export default todoListSlice.reducer;
+
+export const {
+    startLoading,
+    getDataSuccess,
+    getDataFailure,
+    getDataListSuccess,
+    getDataListFailure,
+} = todoListSlice.actions;
