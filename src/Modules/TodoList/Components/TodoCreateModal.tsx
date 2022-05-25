@@ -1,4 +1,4 @@
-import {Input, Modal, Select, Space} from 'antd';
+import {Form, Input, Modal, Select, Space} from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import * as React from 'react';
 import {EPriority, EStatus} from '../Enums';
@@ -84,25 +84,63 @@ export const TodoCreateModal = ({
             : TextObject.TodoList.CreateModal.Title.Create;
     };
 
+    const [form] = Form.useForm();
+
     return (
-        <Modal onCancel={onClose} onOk={handleSave} title={getTitle()} visible>
-            <Space direction="vertical">
-                <Input
-                    onChange={handleTitleChange}
-                    placeholder={
-                        TextObject.TodoList.CreateModal.Placeholder.Title
-                    }
-                    value={newTodo.title}
-                />
-                <TextArea
-                    autoSize={{minRows: 3, maxRows: 5}}
-                    className="description"
-                    onChange={handleDescriptionChange}
-                    placeholder={
-                        TextObject.TodoList.CreateModal.Placeholder.Description
-                    }
-                    value={newTodo.description}
-                />
+        <Modal
+            onCancel={onClose}
+            title={getTitle()}
+            visible
+            onOk={() => {
+                form.validateFields()
+                    .then(() => {
+                        form.resetFields();
+                        handleSave();
+                    })
+                    .catch((info) => {
+                        console.log('Validate Failed:', info);
+                    });
+            }}
+        >
+            <Form form={form} layout="vertical" name="createTodoFOrm">
+                <Form.Item
+                    name="title"
+                    label={TextObject.TodoList.CreateModal.Label.Title}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please input the title of TODO!',
+                        },
+                    ]}
+                >
+                    <Input
+                        onChange={handleTitleChange}
+                        placeholder={
+                            TextObject.TodoList.CreateModal.Placeholder.Title
+                        }
+                        value={newTodo.title}
+                    />
+                </Form.Item>
+                <Form.Item
+                    name="description"
+                    label={TextObject.TodoList.CreateModal.Label.Description}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please input a description of TODO!',
+                        },
+                    ]}
+                >
+                    <TextArea
+                        autoSize={{minRows: 3, maxRows: 5}}
+                        onChange={handleDescriptionChange}
+                        placeholder={
+                            TextObject.TodoList.CreateModal.Placeholder
+                                .Description
+                        }
+                        value={newTodo.description}
+                    />
+                </Form.Item>
                 <Select
                     className="prioritySelect"
                     defaultValue={EPriority.LOW}
@@ -119,7 +157,7 @@ export const TodoCreateModal = ({
                         {TextObject.TodoList.CreateModal.Priority.HIGH}
                     </Select.Option>
                 </Select>
-            </Space>
+            </Form>
         </Modal>
     );
 };
