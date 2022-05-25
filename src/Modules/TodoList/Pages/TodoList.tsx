@@ -6,39 +6,31 @@ import {
     QuestionCircleTwoTone,
 } from '@ant-design/icons';
 import * as React from 'react';
-import {connect} from 'react-redux';
-import {Dispatch} from 'redux';
-import {ITodoListActions, TodoListActions} from '../Actions/TodoListActions';
 import {TodoCard} from '../Components/TodoCard';
 import {TodoCreateModal} from '../Components/TodoCreateModal';
 import {TodoDetailsModal} from '../Components/TodoDetailsModal';
 import {EStatus} from '../Enums';
 import {ITodo} from '../Models';
-import {TodoListServices} from '../Services/TodoListServices';
 import {TextObject} from '../Text';
-import {IAsyncData, IStore} from '../../../Core/Models';
+import {inject, observer} from 'mobx-react';
+import {StoreProps} from '../../../Mobx/store';
 
-/**
- * Модель props на компонента TodoList.
- *
- * @prop {ITodoListActions} [actions] Экшены.
- * @prop {IAsyncData<ITodo>} [asyncData] Задача.
- * @prop {IAsyncData<ITodo[]>} [asyncDataList] Список задач.
- * @prop {boolean} isLoading Состояние загрузки.
- */
-interface ITodoListProps {
-    actions?: ITodoListActions;
-    asyncData?: IAsyncData<ITodo>;
-    asyncDataList?: IAsyncData<ITodo[]>;
-    isLoading: boolean;
-}
+interface IProps extends StoreProps {}
 
-export const TodoList = ({
-    actions,
-    asyncData,
-    asyncDataList,
-    isLoading,
-}: ITodoListProps) => {
+const TodoList = observer((props: IProps) => {
+    const {
+        todoStore: {
+            asyncData,
+            asyncDataList,
+            isLoading,
+            createTodo,
+            getData,
+            getDataByID,
+            editTodo,
+            deleteTodo,
+        },
+    } = props;
+
     const [showDetailsModal, setShowDetailsModal] =
         React.useState<boolean>(false);
     const [showCreateModal, setShowCreateModal] =
@@ -51,7 +43,7 @@ export const TodoList = ({
      * @param {string} id Идентификатор.
      */
     const handleCardOnClick = (id: string): void => {
-        actions.getDataByID(id);
+        getDataByID(id);
         setShowDetailsModal(true);
     };
 
@@ -80,7 +72,7 @@ export const TodoList = ({
      * Обработчик создания TODO.
      */
     const handleCreateTodoClick = (todo: ITodo): void => {
-        actions.createTodo(todo);
+        createTodo(todo);
         setShowCreateModal(false);
     };
 
@@ -88,14 +80,14 @@ export const TodoList = ({
      * Обработчик изменения статуса TODO.
      */
     const handleStatusChange = (todo: ITodo): void => {
-        actions.editTodo(todo);
+        editTodo(todo);
     };
 
     /**
      * Обработчик удаления TODO.
      */
     const handleDelete = (todo: ITodo): void => {
-        actions.deleteTodo(todo);
+        deleteTodo(todo);
         setShowDetailsModal(false);
     };
 
@@ -118,24 +110,24 @@ export const TodoList = ({
      * Обработчик сохранения при редактировании.
      */
     const handleEditSave = (todo: ITodo): void => {
-        actions.editTodo(todo);
+        editTodo(todo);
         setShowEditModal(false);
         setShowDetailsModal(true);
     };
 
     React.useEffect(() => {
-        actions.getData();
+        getData();
     }, []);
 
-    const todoList = asyncDataList?.data?.filter((todo) => {
+    const todoList = asyncDataList?.data?.filter((todo: any) => {
         return todo.status === EStatus.TODO;
     });
 
-    const doingList = asyncDataList?.data?.filter((todo) => {
+    const doingList = asyncDataList?.data?.filter((todo: any) => {
         return todo.status === EStatus.DOING;
     });
 
-    const doneList = asyncDataList?.data?.filter((todo) => {
+    const doneList = asyncDataList?.data?.filter((todo: any) => {
         return todo.status === EStatus.DONE;
     });
 
@@ -154,7 +146,7 @@ export const TodoList = ({
                                     {TextObject.TodoList.List.ColumnTitle.TODO}
                                 </b>
                             }
-                            renderItem={(item) => (
+                            renderItem={(item: any) => (
                                 <List.Item key={item.id}>
                                     <TodoCard
                                         onClick={handleCardOnClick}
@@ -175,7 +167,7 @@ export const TodoList = ({
                                     {TextObject.TodoList.List.ColumnTitle.Doing}
                                 </b>
                             }
-                            renderItem={(item) => (
+                            renderItem={(item: any) => (
                                 <List.Item key={item.id}>
                                     <TodoCard
                                         onClick={handleCardOnClick}
@@ -196,7 +188,7 @@ export const TodoList = ({
                                     {TextObject.TodoList.List.ColumnTitle.Done}
                                 </b>
                             }
-                            renderItem={(item) => (
+                            renderItem={(item: any) => (
                                 <List.Item key={item.id}>
                                     <TodoCard
                                         onClick={handleCardOnClick}
@@ -239,16 +231,6 @@ export const TodoList = ({
             />
         </Spin>
     );
-};
-
-const mapStateToProps = (store: IStore) => ({
-    asyncData: store.todoListReducer.asyncData,
-    asyncDataList: store.todoListReducer.asyncDataList,
-    isLoading: store.todoListReducer.isLoading,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-    actions: new TodoListActions(dispatch, new TodoListServices()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(TodoList);
+export default inject('todoStore')(TodoList);
