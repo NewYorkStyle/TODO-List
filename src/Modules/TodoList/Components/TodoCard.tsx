@@ -62,7 +62,7 @@ export const TodoCard = ({
     };
 
     return (
-        <div onClick={handleOnClick}>
+        <div className="todoCard" onClick={handleOnClick}>
             <Typography.Text type={getPriorityMark(priority)}>
                 [{getPriorityText(priority)}]
             </Typography.Text>

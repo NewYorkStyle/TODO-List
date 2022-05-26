@@ -12,23 +12,35 @@ import {TodoDetailsModal} from '../Components/TodoDetailsModal';
 import {EStatus} from '../Enums';
 import {ITodo} from '../Models';
 import {TextObject} from '../Text';
-import {useAppDispatch, useAppSelector} from '../../../Core/ReduxHooks';
-import {TodoListActions} from '../Actions/TodoListActions';
-import {TodoListServices} from '../Services/TodoListServices';
+import {todoListApi} from '../Store/TodoListApi';
 
 export const TodoList = () => {
+    /** Флаг для показа модального окна детального просмотра */
     const [showDetailsModal, setShowDetailsModal] =
         React.useState<boolean>(false);
+    /** Флаг для показа модального окна создания */
     const [showCreateModal, setShowCreateModal] =
         React.useState<boolean>(false);
+    /** Флаг для показа модального окна редактирования */
     const [showEditModal, setShowEditModal] = React.useState<boolean>(false);
+    /** Идентификатор выбранной задачи */
+    const [todoId, setTodoId] = React.useState<string>(null);
 
-    const {asyncData, asyncDataList, isLoading} = useAppSelector(
-        (state) => state.todoListReducer
-    );
-
-    const dispatch = useAppDispatch();
-    const actions = new TodoListActions(dispatch, new TodoListServices());
+    /** Получение списка задач */
+    const {data: dataList, isFetching: isListLoading} =
+        todoListApi.useGetTodoListQuery();
+    /** Получение задачи */
+    const {data, isFetching: isDataLoading} =
+        todoListApi.useGetTodoByIDQuery(todoId);
+    /** Создание задачи */
+    const [createTodo, {isLoading: isCreateLoading}] =
+        todoListApi.useCreateTodoMutation();
+    /** Редактирование задачи */
+    const [editTodo, {isLoading: isEditLoading}] =
+        todoListApi.useEditTodoMutation();
+    /** Удаление задачи */
+    const [deleteTodo, {isLoading: isDeleteLoading}] =
+        todoListApi.useDeleteTodoMutation();
 
     /**
      * Обаотчик клика по задаче в списке.
@@ -36,7 +48,7 @@ export const TodoList = () => {
      * @param {string} id Идентификатор.
      */
     const handleCardOnClick = (id: string): void => {
-        actions.getDataByID(id);
+        setTodoId(id);
         setShowDetailsModal(true);
     };
 
@@ -65,7 +77,7 @@ export const TodoList = () => {
      * Обработчик создания TODO.
      */
     const handleCreateTodoClick = (todo: ITodo): void => {
-        actions.createTodo(todo);
+        createTodo(todo);
         setShowCreateModal(false);
     };
 
@@ -73,14 +85,14 @@ export const TodoList = () => {
      * Обработчик изменения статуса TODO.
      */
     const handleStatusChange = (todo: ITodo): void => {
-        actions.editTodo(todo);
+        editTodo(todo);
     };
 
     /**
      * Обработчик удаления TODO.
      */
     const handleDelete = (todo: ITodo): void => {
-        actions.deleteTodo(todo);
+        deleteTodo(todo);
         setShowDetailsModal(false);
     };
 
@@ -103,30 +115,37 @@ export const TodoList = () => {
      * Обработчик сохранения при редактировании.
      */
     const handleEditSave = (todo: ITodo): void => {
-        actions.editTodo(todo);
+        editTodo(todo);
         setShowEditModal(false);
         setShowDetailsModal(true);
     };
 
-    React.useEffect(() => {
-        actions.getData();
-    }, []);
-
-    const todoList = asyncDataList?.data?.filter((todo) => {
+    /** Список задач в статусе TODO */
+    const todoList = dataList?.filter((todo: ITodo) => {
         return todo.status === EStatus.TODO;
     });
 
-    const doingList = asyncDataList?.data?.filter((todo) => {
+    /** Список задач в статусе DOING */
+    const doingList = dataList?.filter((todo: ITodo) => {
         return todo.status === EStatus.DOING;
     });
 
-    const doneList = asyncDataList?.data?.filter((todo) => {
+    /** Список задач в статусе DONE */
+    const doneList = dataList?.filter((todo: ITodo) => {
         return todo.status === EStatus.DONE;
     });
 
+    /** Состояние загрузки */
+    const isLoading =
+        isListLoading ||
+        isCreateLoading ||
+        isEditLoading ||
+        isDeleteLoading ||
+        isDataLoading;
+
     return (
         <Spin spinning={isLoading} tip={TextObject.TodoList.Loading}>
-            {asyncDataList?.data ? (
+            {dataList ? (
                 <Row>
                     <Col span={8}>
                         <List
@@ -139,11 +158,11 @@ export const TodoList = () => {
                                     {TextObject.TodoList.List.ColumnTitle.TODO}
                                 </b>
                             }
-                            renderItem={(item) => (
-                                <List.Item key={item.id}>
+                            renderItem={(todo: ITodo) => (
+                                <List.Item key={todo.id}>
                                     <TodoCard
                                         onClick={handleCardOnClick}
-                                        todo={item}
+                                        todo={todo}
                                     />
                                 </List.Item>
                             )}
@@ -160,11 +179,11 @@ export const TodoList = () => {
                                     {TextObject.TodoList.List.ColumnTitle.Doing}
                                 </b>
                             }
-                            renderItem={(item) => (
-                                <List.Item key={item.id}>
+                            renderItem={(todo: ITodo) => (
+                                <List.Item key={todo.id}>
                                     <TodoCard
                                         onClick={handleCardOnClick}
-                                        todo={item}
+                                        todo={todo}
                                     />
                                 </List.Item>
                             )}
@@ -181,11 +200,11 @@ export const TodoList = () => {
                                     {TextObject.TodoList.List.ColumnTitle.Done}
                                 </b>
                             }
-                            renderItem={(item) => (
-                                <List.Item key={item.id}>
+                            renderItem={(todo: ITodo) => (
+                                <List.Item key={todo.id}>
                                     <TodoCard
                                         onClick={handleCardOnClick}
-                                        todo={item}
+                                        todo={todo}
                                     />
                                 </List.Item>
                             )}
@@ -193,26 +212,26 @@ export const TodoList = () => {
                     </Col>
                 </Row>
             ) : null}
-            {showDetailsModal && asyncData?.data ? (
+            {showDetailsModal && !isLoading && data ? (
                 <TodoDetailsModal
                     onChange={handleStatusChange}
                     onClose={handleDetailsModalClose}
                     onDelete={handleDelete}
                     onEdit={handleEditButtonClick}
-                    todo={asyncData.data}
+                    todo={data}
                 />
             ) : null}
-            {showCreateModal && (
+            {showCreateModal && !isLoading && (
                 <TodoCreateModal
                     onClose={handleCreateModalClose}
                     onSave={handleCreateTodoClick}
                 />
             )}
-            {showEditModal && (
+            {showEditModal && !isLoading && (
                 <TodoCreateModal
                     onClose={handleEditModalClose}
                     onSave={handleEditSave}
-                    todo={asyncData.data}
+                    todo={data}
                 />
             )}
             <Button
