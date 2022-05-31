@@ -1,34 +1,37 @@
-import {Button, Modal, Popconfirm, Steps} from 'antd';
+import {Button, Modal, Popconfirm, Spin, Steps} from 'antd';
 import * as React from 'react';
 import {EStatus} from '../Enums';
-import {ITodo} from '../Models';
+import {todoListApi} from '../Store/todos.api';
 import {TextObject} from '../Text';
 
 /**
  * Модель props на компонента TodoDetailsModal.
  *
- * @prop {Function} onChange Обработчик изменения статуса.
  * @prop {Function} onClose Обработчик закрытия модального окна.
  * @prop {Function} onDelete Обработчик удаления задачи.
  * @prop {Function} onEdit Обработчик кнопки редактирования.
- * @prop {ITodo} todo Задача.
+ * @prop {string} todoId Идентификатор задачи.
  */
 interface ITodoDetailsModalProps {
-    onChange: (todo: ITodo) => void;
     onClose: () => void;
-    onDelete: (todo: ITodo) => void;
+    onDelete: () => void;
     onEdit: () => void;
-    todo: ITodo;
+    todoId: string;
 }
 
 export const TodoDetailsModal = ({
-    onChange,
     onClose,
-    onDelete,
     onEdit,
-    todo,
-    todo: {description, status, title},
+    onDelete,
+    todoId,
 }: ITodoDetailsModalProps) => {
+    /** Получение задачи */
+    const {data: todo, isFetching} = todoListApi.useGetTodoByIDQuery(todoId);
+    /** Редактирование задачи */
+    const [editTodo] = todoListApi.useEditTodoMutation();
+    /** Удаление задачи */
+    const [deleteTodo] = todoListApi.useDeleteTodoMutation();
+
     /**
      * Функцмя для получения текущего шага.
      *
@@ -52,14 +55,15 @@ export const TodoDetailsModal = ({
      * @param {EStatus} status Новое значение статуса.
      */
     const handleStatusChange = (status: EStatus) => {
-        onChange({...todo, status});
+        editTodo({...todo!, status});
     };
 
     /**
      * Обработчик удаления задачи.
      */
     const handleDelete = () => {
-        onDelete(todo);
+        deleteTodo(todo!);
+        onDelete();
     };
 
     /**
@@ -140,23 +144,25 @@ export const TodoDetailsModal = ({
 
     return (
         <Modal
-            footer={getFooterButtons(status)}
+            footer={getFooterButtons(todo?.status!)}
             onCancel={onClose}
-            title={title}
+            title={todo?.title}
             visible
         >
-            <Steps current={getCurrentStep(status)} progressDot>
-                <Steps.Step
-                    title={TextObject.TodoList.DetailsModal.Steps.TODO}
-                />
-                <Steps.Step
-                    title={TextObject.TodoList.DetailsModal.Steps.Doing}
-                />
-                <Steps.Step
-                    title={TextObject.TodoList.DetailsModal.Steps.Done}
-                />
-            </Steps>
-            {description}
+            <Spin spinning={isFetching} tip={TextObject.TodoList.Loading}>
+                <Steps current={getCurrentStep(todo?.status!)} progressDot>
+                    <Steps.Step
+                        title={TextObject.TodoList.DetailsModal.Steps.TODO}
+                    />
+                    <Steps.Step
+                        title={TextObject.TodoList.DetailsModal.Steps.Doing}
+                    />
+                    <Steps.Step
+                        title={TextObject.TodoList.DetailsModal.Steps.Done}
+                    />
+                </Steps>
+                {todo?.description}
+            </Spin>
         </Modal>
     );
 };

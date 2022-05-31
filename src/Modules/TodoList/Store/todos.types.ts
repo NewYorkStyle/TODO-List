@@ -1,5 +1,4 @@
-import {EPriority, EStatus} from './Enums';
-import {IAsyncData} from '../../Core/Models';
+import {EPriority, EStatus} from '../Enums';
 
 /**
  * Модель задачи.
@@ -16,17 +15,4 @@ export interface ITodo {
     status: EStatus;
     title: string;
     id?: string;
-}
-
-/**
- * Модель state в store.
- *
- * @prop {IAsyncData<ITodo>} [asyncData] Задача.
- * @prop {IAsyncData<ITodo[]>} [asyncDataList] Список задач.
- * @prop {boolean} [isLoading] Состояние загрузки.
- */
-export interface ITodoListStore {
-    asyncData?: IAsyncData<ITodo>;
-    asyncDataList?: IAsyncData<ITodo[]>;
-    isLoading?: boolean;
 }

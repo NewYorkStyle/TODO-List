@@ -9,7 +9,7 @@
 }
 
 .deleteButton {
-    position:absolute;
+    position: absolute;
     left: 15px;
 }
 
@@ -29,4 +29,8 @@
     padding-right: 24px;
     padding-left: 24px;
     cursor: pointer;
+}
+
+.todoCard {
+    width: 100%;
 }

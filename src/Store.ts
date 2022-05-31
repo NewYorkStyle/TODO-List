@@ -1,12 +1,13 @@
-import {applyMiddleware, combineReducers, createStore} from 'redux';
-import thunk from 'redux-thunk';
-import todoListReducer from './Modules/TodoList/Reducers/index';
+import {combineReducers, configureStore} from '@reduxjs/toolkit';
+import {todoListApi} from './Modules/TodoList/Store/todos.api';
 
-const store = createStore(
-    combineReducers({
-        todoListReducer: todoListReducer,
-    }),
-    applyMiddleware(thunk)
-);
+const rootReducer = combineReducers({
+    [todoListApi.reducerPath]: todoListApi.reducer,
+});
 
-export default store;
+export const setupStore = () =>
+    configureStore({
+        reducer: rootReducer,
+        middleware: (getDefaultMiddleware) =>
+            getDefaultMiddleware().concat(todoListApi.middleware),
+    });
