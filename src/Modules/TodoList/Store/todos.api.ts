@@ -1,9 +1,9 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/dist/query/react';
 import {REST_URL} from '../../../Core/Consts';
-import {ITodo} from '../Models';
+import {ITodo} from './todos.types';
 
 export const todoListApi = createApi({
-    reducerPath: 'todoList',
+    reducerPath: 'todos',
     baseQuery: fetchBaseQuery({baseUrl: REST_URL}),
     tagTypes: ['TodoList', 'Todo'],
     endpoints: (build) => ({

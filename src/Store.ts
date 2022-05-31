@@ -1,5 +1,5 @@
 import {combineReducers, configureStore} from '@reduxjs/toolkit';
-import {todoListApi} from './TodoListApi';
+import {todoListApi} from './Modules/TodoList/Store/todos.api';
 
 const rootReducer = combineReducers({
     [todoListApi.reducerPath]: todoListApi.reducer,

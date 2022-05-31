@@ -2,7 +2,8 @@ import {Form, Input, Modal, Select, Space} from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import * as React from 'react';
 import {EPriority, EStatus} from '../Enums';
-import {ITodo} from '../Models';
+import {ITodo} from '../Store/todos.types';
+import {todoListApi} from '../Store/todos.api';
 import {TextObject} from '../Text';
 
 /**
@@ -10,33 +11,47 @@ import {TextObject} from '../Text';
  *
  * @prop {Function} onClose Обработчик закрытия модального окна.
  * @prop {Function} onSave Обработчик создания/сохранения.
- * @prop {ITodo} todo Задача.
+ * @prop {string} [todoId] Идентификатор задачи.
  */
 interface ITodoCreateModalProps {
     onClose: () => void;
-    onSave: (todo: ITodo) => void;
-    todo?: ITodo;
+    onSave: () => void;
+    todoId?: string;
 }
 
 export const TodoCreateModal = ({
     onClose,
     onSave,
-    todo,
+    todoId,
 }: ITodoCreateModalProps) => {
-    const initValue = todo
-        ? todo
-        : {
-              description: null,
-              priority: EPriority.LOW,
-              status: EStatus.TODO,
-              title: null,
-          };
+    let todo: ITodo = {
+        description: '',
+        priority: EPriority.LOW,
+        status: EStatus.TODO,
+        title: '',
+    };
+
+    let handleOnSave: (todo: ITodo) => void;
+
+    if (todoId) {
+        /** Получение задачи */
+        todo = todoListApi.useGetTodoByIDQuery(todoId).data!;
+        /** Редактирование задачи */
+        const [editTodo] = todoListApi.useEditTodoMutation();
+        handleOnSave = editTodo;
+    } else {
+        /** Создание задачи */
+        const [createTodo] = todoListApi.useCreateTodoMutation();
+        handleOnSave = createTodo;
+    }
+
     /**
      * Обработчик создания/сохранения
      */
     const handleSave = (values: ITodo) => {
-        const newTodo = {...initValue, ...values};
-        onSave(newTodo);
+        const newTodo = {...todo, ...values};
+        handleOnSave(newTodo);
+        onSave();
     };
 
     /**
@@ -70,7 +85,7 @@ export const TodoCreateModal = ({
                 form={form}
                 layout="vertical"
                 name="createTodoFOrm"
-                initialValues={initValue}
+                initialValues={todo}
             >
                 <Form.Item
                     name="title"

@@ -10,9 +10,9 @@ import {TodoCard} from '../Components/TodoCard';
 import {TodoCreateModal} from '../Components/TodoCreateModal';
 import {TodoDetailsModal} from '../Components/TodoDetailsModal';
 import {EStatus} from '../Enums';
-import {ITodo} from '../Models';
+import {ITodo} from '../Store/todos.types';
 import {TextObject} from '../Text';
-import {todoListApi} from '../Store/TodoListApi';
+import {todoListApi} from '../Store/todos.api';
 
 export const TodoList = () => {
     /** Флаг для показа модального окна детального просмотра */
@@ -24,23 +24,10 @@ export const TodoList = () => {
     /** Флаг для показа модального окна редактирования */
     const [showEditModal, setShowEditModal] = React.useState<boolean>(false);
     /** Идентификатор выбранной задачи */
-    const [todoId, setTodoId] = React.useState<string>(null);
+    const [todoId, setTodoId] = React.useState<string>('');
 
     /** Получение списка задач */
-    const {data: dataList, isFetching: isListLoading} =
-        todoListApi.useGetTodoListQuery();
-    /** Получение задачи */
-    const {data, isFetching: isDataLoading} =
-        todoListApi.useGetTodoByIDQuery(todoId);
-    /** Создание задачи */
-    const [createTodo, {isLoading: isCreateLoading}] =
-        todoListApi.useCreateTodoMutation();
-    /** Редактирование задачи */
-    const [editTodo, {isLoading: isEditLoading}] =
-        todoListApi.useEditTodoMutation();
-    /** Удаление задачи */
-    const [deleteTodo, {isLoading: isDeleteLoading}] =
-        todoListApi.useDeleteTodoMutation();
+    const {data: dataList, isFetching} = todoListApi.useGetTodoListQuery();
 
     /**
      * Обаотчик клика по задаче в списке.
@@ -76,23 +63,14 @@ export const TodoList = () => {
     /**
      * Обработчик создания TODO.
      */
-    const handleCreateTodoClick = (todo: ITodo): void => {
-        createTodo(todo);
+    const handleCreateTodoClick = (): void => {
         setShowCreateModal(false);
-    };
-
-    /**
-     * Обработчик изменения статуса TODO.
-     */
-    const handleStatusChange = (todo: ITodo): void => {
-        editTodo(todo);
     };
 
     /**
      * Обработчик удаления TODO.
      */
-    const handleDelete = (todo: ITodo): void => {
-        deleteTodo(todo);
+    const handleDelete = (): void => {
         setShowDetailsModal(false);
     };
 
@@ -114,8 +92,7 @@ export const TodoList = () => {
     /**
      * Обработчик сохранения при редактировании.
      */
-    const handleEditSave = (todo: ITodo): void => {
-        editTodo(todo);
+    const handleEditSave = (): void => {
         setShowEditModal(false);
         setShowDetailsModal(true);
     };
@@ -135,16 +112,8 @@ export const TodoList = () => {
         return todo.status === EStatus.DONE;
     });
 
-    /** Состояние загрузки */
-    const isLoading =
-        isListLoading ||
-        isCreateLoading ||
-        isEditLoading ||
-        isDeleteLoading ||
-        isDataLoading;
-
     return (
-        <Spin spinning={isLoading} tip={TextObject.TodoList.Loading}>
+        <Spin spinning={isFetching} tip={TextObject.TodoList.Loading}>
             {dataList ? (
                 <Row>
                     <Col span={8}>
@@ -212,26 +181,25 @@ export const TodoList = () => {
                     </Col>
                 </Row>
             ) : null}
-            {showDetailsModal && !isLoading && data ? (
+            {showDetailsModal ? (
                 <TodoDetailsModal
-                    onChange={handleStatusChange}
                     onClose={handleDetailsModalClose}
                     onDelete={handleDelete}
                     onEdit={handleEditButtonClick}
-                    todo={data}
+                    todoId={todoId}
                 />
             ) : null}
-            {showCreateModal && !isLoading && (
+            {showCreateModal && (
                 <TodoCreateModal
                     onClose={handleCreateModalClose}
                     onSave={handleCreateTodoClick}
                 />
             )}
-            {showEditModal && !isLoading && (
+            {showEditModal && (
                 <TodoCreateModal
                     onClose={handleEditModalClose}
                     onSave={handleEditSave}
-                    todo={data}
+                    todoId={todoId}
                 />
             )}
             <Button

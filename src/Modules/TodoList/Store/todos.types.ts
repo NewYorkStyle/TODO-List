@@ -1,4 +1,4 @@
-import {EPriority, EStatus} from './Enums';
+import {EPriority, EStatus} from '../Enums';
 
 /**
  * Модель задачи.
